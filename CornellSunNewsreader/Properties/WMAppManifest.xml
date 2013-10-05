@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{dc4e287d-7168-4121-975e-456f5ec29516}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.6.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun">
+<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
+  <DefaultLanguage xmlns="" code="en" />
+  <App xmlns="" ProductID="{ea3209dd-8945-4102-a28d-aaa810011245}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.6.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun" PublisherID="{b3f69bac-1836-4b25-99df-195fbb09b006}">
     <IconPath IsRelative="true" IsResource="false">small mobile app tile.png</IconPath>
     <Capabilities>
       <!--
@@ -28,12 +29,23 @@
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="CornellSunNewsreaderToken" TaskName="_default">
-        <TemplateType5>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Tile Size.png</BackgroundImageURI>
+        <TemplateFlip>
+          <SmallImageURI IsResource="false" IsRelative="true">Tile Size.png</SmallImageURI>
           <Count>0</Count>
+          <BackgroundImageURI IsResource="false" IsRelative="true">Tile Size.png</BackgroundImageURI>
           <Title>Cornell Daily Sun</Title>
-        </TemplateType5>
+          <BackContent></BackContent>
+          <BackBackgroundImageURI></BackBackgroundImageURI>
+          <BackTitle></BackTitle>
+          <DeviceLockImageURI></DeviceLockImageURI>
+          <HasLarge>false</HasLarge>
+        </TemplateFlip>
       </PrimaryToken>
     </Tokens>
+    <ScreenResolutions>
+      <ScreenResolution Name="ID_RESOLUTION_WVGA" />
+      <ScreenResolution Name="ID_RESOLUTION_WXGA" />
+      <ScreenResolution Name="ID_RESOLUTION_HD720P" />
+    </ScreenResolutions>
   </App>
 </Deployment>
