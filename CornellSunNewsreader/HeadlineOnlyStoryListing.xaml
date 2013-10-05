@@ -1,0 +1,22 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:CornellSunNewsreader" xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+	mc:Ignorable="d"
+	x:Class="CornellSunNewsreader.StoryList"
+	d:DesignWidth="2152" d:DesignHeight="458">
+
+	<Grid x:Name="LayoutRoot" Background="Transparent">
+		<ScrollViewer d:LayoutOverrides="Height" HorizontalAlignment="Left" Width="424">
+			<StackPanel Height="865">
+				<local:StoryHeadline Margin="0,0,0,20"/>
+				<local:StoryHeadline Margin="0,0,0,20"/>
+				<local:StoryHeadline Margin="0,0,0,20"/>
+				<local:StoryHeadline Margin="0,0,0,20"/>
+				<local:StoryHeadline Margin="0,0,0,20"/>
+			</StackPanel>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

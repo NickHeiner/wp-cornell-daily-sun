@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
+  <App xmlns="" ProductID="{dc4e287d-7168-4121-975e-456f5ec29516}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.6.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun">
+    <IconPath IsRelative="true" IsResource="false">small mobile app tile.png</IconPath>
+    <Capabilities>
+      <!--
+      <Capability Name="ID_CAP_CAMERA" />
+      <Capability Name="ID_CAP_GAMERSERVICES" />
+      <Capability Name="ID_CAP_IDENTITY_DEVICE" />
+      <Capability Name="ID_CAP_IDENTITY_USER" />
+      <Capability Name="ID_CAP_INTEROPSERVICES" />
+      <Capability Name="ID_CAP_LOCATION" />
+      <Capability Name="ID_CAP_MEDIALIB" />
+      <Capability Name="ID_CAP_MICROPHONE" />
+       -->
+      <Capability Name="ID_CAP_NETWORKING" />
+      <Capability Name="ID_CAP_NETWORKING_ADMIN" />
+      <!--
+      <Capability Name="ID_CAP_PHONEDIALER" />
+      <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
+      <Capability Name="ID_CAP_RINGTONE_ADD" />
+      <Capability Name="ID_CAP_SENSORS" />
+      -->
+      <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
+    </Capabilities>
+    <Tasks>
+      <DefaultTask Name="_default" NavigationPage="MainPivot.xaml" />
+    </Tasks>
+    <Tokens>
+      <PrimaryToken TokenID="CornellSunNewsreaderToken" TaskName="_default">
+        <TemplateType5>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Tile Size.png</BackgroundImageURI>
+          <Count>0</Count>
+          <Title>Cornell Daily Sun</Title>
+        </TemplateType5>
+      </PrimaryToken>
+    </Tokens>
+  </App>
+</Deployment>

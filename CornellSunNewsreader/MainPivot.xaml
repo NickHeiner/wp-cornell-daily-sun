@@ -1,0 +1,152 @@
+﻿<phone:PhoneApplicationPage 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:CornellSunNewsreader"
+    xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+	x:Class="CornellSunNewsreader.MainPivot"
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}"
+	SupportedOrientations="Portrait" Orientation="Portrait"
+	shell:SystemTray.IsVisible="True">
+
+    <!-- TODO: use page transitions http://blogs.msdn.com/b/wfaught/archive/2010/11/15/transitions.aspx -->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+
+        <controls:Pivot Title="CORNELL DAILY SUN" x:Name="MainPivotControl">
+
+            <controls:PivotItem x:Name="FavoritesPivotItem" Header="favorites">
+                <ScrollViewer VerticalScrollBarVisibility="{Binding VerticalScrolling}">
+                    <StackPanel>
+                        <TextBlock Visibility="{Binding NoFavorites}"
+                               Style="{StaticResource disabledText}">
+                        You have not yet added any favorites. Tap and hold a story or section to add it.
+                        </TextBlock>
+
+                        <ListBox
+                             ItemsSource="{Binding FavoriteSections}"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             SelectionChanged="MenuList_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <toolkit:ContextMenuService.ContextMenu>
+                                            <toolkit:ContextMenu>
+                                                <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="FavoritesContextMenuItem_Click" />
+                                            </toolkit:ContextMenu>
+                                        </toolkit:ContextMenuService.ContextMenu>
+
+                                        <TextBlock Text="{Binding DisplayName}" Style="{StaticResource PhoneTextTitle2Style}"/>
+
+                                        <ListBox ItemsSource="{Binding TopStoryViewModels}" 
+                                                 SelectionChanged="MenuList_SelectionChanged" 
+                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <local:StoryControl />
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding FavoriteStoriesExist}">Favorite Stories</TextBlock>
+
+                        <ListBox 
+                             ItemsSource="{Binding FavoriteStories}"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             SelectionChanged="MenuList_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <toolkit:ContextMenuService.ContextMenu>
+                                            <toolkit:ContextMenu>
+                                                <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="FavoritesContextMenuItem_Click" />
+                                            </toolkit:ContextMenu>
+                                        </toolkit:ContextMenuService.ContextMenu>
+
+                                        <local:StoryControl />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Style="{StaticResource disabledText}" Visibility="{Binding DisplayFavoriteStoriesHelp}">You can add favorite stories.</TextBlock>
+                        <TextBlock Style="{StaticResource disabledText}" Visibility="{Binding DisplayFavoriteSectionsHelp}">You can add favorite sections.</TextBlock>
+
+                        <TextBlock Style="{StaticResource disabledText}" Visibility="{Binding FavoritesExist}">To remove an item, tap and hold it on this list.</TextBlock>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:PivotItem>
+
+            <controls:PivotItem Header="sections" x:Name="SectionsPivotItem">
+                <Grid>
+
+                    <ProgressBar x:Name="LoadingProgressBar"
+                         IsIndeterminate="True"
+                         Style="{StaticResource PerformanceProgressBar}"
+                         VerticalAlignment="Top"/>
+
+                    <TextBlock x:Name="DownloadFailed"
+                             Visibility="Collapsed"
+                             Style="{StaticResource disabledText}">
+                        CornellSun.com could not be reached. Do you have a network connection?
+                    </TextBlock>
+
+                    <ListBox x:Name="sectionList" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="64" 
+                             SelectionChanged="MenuList_SelectionChanged"
+                             ItemsSource="{Binding SectionViewModels}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="SectionContextMenuItem_Click" />
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
+            </controls:PivotItem>
+        </controls:Pivot>
+    </Grid>
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    
+</phone:PhoneApplicationPage>

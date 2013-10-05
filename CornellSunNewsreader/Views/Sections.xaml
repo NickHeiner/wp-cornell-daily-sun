@@ -1,0 +1,94 @@
+﻿<phone:PhoneApplicationPage 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:u="clr-namespace:DanielVaughan.WindowsPhone7Unleashed" 
+    xmlns:ValueConverters="clr-namespace:DanielVaughan.WindowsPhone7Unleashed.ValueConverters" 
+	xmlns:local="clr-namespace:CornellSunNewsreader"
+    xmlns:localview="clr-namespace:CornellSunNewsreader.Views"
+	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
+	x:Class="CornellSunNewsreader.Sections"
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}"
+	SupportedOrientations="Portrait" Orientation="Portrait"
+    >
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized" Opacity=".5" StateChanged="ApplicationBar_StateChanged">
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="pin section to start" Click="AppBarPinToStart_Click" />
+                <shell:ApplicationBarMenuItem Text="colophon" Click="AppBarColophon_Click" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+    <!-- this is a Grid, not a StackPanel, because that way the loading bar and pivot control
+         will take up the same space. Thus, when loading bar disappears, the content won't jump up. -->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+
+        <!-- this needs to be at the very top of the screen -->
+        <ProgressBar x:Name="LoadingProgressBar"
+                     IsIndeterminate="True"
+                     Style="{StaticResource PerformanceProgressBar}"
+                     Visibility="{Binding LoadingBarVisibility}"
+                     VerticalAlignment="Top"/>
+
+        <controls:Pivot Title="SECTIONS" x:Name="pivotControl" ItemsSource="{Binding SectionViewModels}" SelectionChanged="pivotControl_SelectionChanged">
+            <controls:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}" />
+                </DataTemplate>
+            </controls:Pivot.HeaderTemplate>
+            <controls:Pivot.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource disabledText}" Visibility="{Binding NoStoryContent}">
+                            Content could not be downloaded from CornellSun.com. Do you have a network connection?
+                        </TextBlock>
+                        <!-- if you don't explicitly specify the height, the scrolling won't work -->
+                        <!--
+                        <ListBox ItemsSource="{Binding StoryViewModels}" SelectionChanged="StoryList_SelectionChanged"
+                                 Height="625" u:ScrollViewerMonitor.AtEndCommand="{Binding ElementName=LayoutRoot, Path=DataContext.FetchMoreDataCommand}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <local:StoryControl />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        -->
+
+                        <localview:StoryList Host="{Binding ElementName=LayoutRoot, Path=DataContext}" StoryViewModels="{Binding StoryViewModels}" StateId="{Binding Section}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </controls:Pivot.ItemTemplate>
+        </controls:Pivot>
+    </Grid>
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+
+</phone:PhoneApplicationPage>

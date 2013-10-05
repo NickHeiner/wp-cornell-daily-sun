@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="CornellSunNewsreader.Views.CommentView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CornellSunNewsreader.Views"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="480" d:DesignWidth="480">
+
+    <UserControl.Resources>
+        <toolkit:ThreadDateTimeConverter x:Key="ThreadDateTimeConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Margin="0,40,0,0" x:Name="LayoutRoot">
+        <toolkit:WrapPanel Orientation="Horizontal" Background="{StaticResource PhoneChromeBrush}">
+            <Image Source="{Binding AuthorAvatar}" Margin="5,5,10,5" Width="32" Height="32" VerticalAlignment="Center" Visibility="{Binding AvatarVisiblity}"/>
+            <TextBlock Text="{Binding AuthorName}" Margin="5,5" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle3Style}" FontWeight="Bold" 
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Created, Converter={StaticResource ThreadDateTimeConverter}}" Style="{StaticResource PhoneTextAccentStyle}" VerticalAlignment="Center"/>
+        </toolkit:WrapPanel>
+        <local:HyperlinkTextBlock Text="{Binding Message}" Suffix="{Binding LikesText}" />
+        <ItemsControl ItemsSource="{Binding Children}" Margin="30,0,0,0">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:CommentView />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
