@@ -34,10 +34,6 @@ namespace CornellSunNewsreader.Data
     // This could be totally buggy, since I changed a lot of it without being able to test much
     public static class SunData
     {
-        private static readonly string StoriesUrl = SunApiAdapter.CornellSunRootUrl + "section/wp7/stories/";
-        private static readonly string StoryNidsUrl = StoriesUrl + "nids/";
-        private static readonly string PageArg = "?page=";
-
         /// <summary>
         /// Append a story's nid to this to get its comments
         /// </summary>
@@ -192,11 +188,6 @@ namespace CornellSunNewsreader.Data
             }
         }
 
-        internal static string getQueryUrl(int sectionId, int pageNumber)
-        {
-            return StoriesUrl + sectionId + PageArg + pageNumber.ToString();
-        }
-
         internal static ObservableCollection<Story> GetStories(Section section)
         {
             return GetStories(section, InsertStoriesAt.Beginning);
@@ -207,7 +198,7 @@ namespace CornellSunNewsreader.Data
             if (!_downloadedSectionStories.Contains(section) && !_currentlyDownloadingSectionStories.Contains(section))
             {
                 _currentlyDownloadingSectionStories.Add(section);
-                downloadData(getQueryUrl(section.Vid, section.LoadedPage + 1), (sender, e) =>
+                downloadData(SunApiAdapter.StoriesUrlOfSection(section), (sender, e) =>
                 {
                     _downloadedSectionStories.Add(section);
                     _currentlyDownloadingSectionStories.Remove(section);
@@ -236,13 +227,7 @@ namespace CornellSunNewsreader.Data
 
             try
             {
-                JObject data = JObject.Parse(downloadCompletedEvent.Result);
-
-                JsonSerializer deserializer = new JsonSerializer();
-
-                var stories = from node in data["nodes"]
-                              select storyOfJson(deserializer, node["node"]);
-
+                var stories = SunApiAdapter.StoriesOfApiResponse(downloadCompletedEvent.Result);
                 var existingNids = storyCollection.Select(s => s.Nid);
                 int countStoriesAdded = insertStoriesAt == InsertStoriesAt.Beginning ? 0 : storyCollection.Count;
                 foreach (Story story in stories.Where(article => !existingNids.Contains(article.Nid)))
@@ -260,12 +245,6 @@ namespace CornellSunNewsreader.Data
                 Debug.Assert(false, "Why couldn't the JSON be parsed?");
                 DownloadFailed(sender, downloadCompletedEvent);
             }
-        }
-
-        private static Story storyOfJson(JsonSerializer serializer, JToken storyData)
-        {
-            StoryJson storyJson = serializer.Deserialize<StoryJson>(new JTokenReader(storyData));
-            return storyJson.ToStory();
         }
 
         internal static Story getStory(int nid)
@@ -389,7 +368,7 @@ namespace CornellSunNewsreader.Data
             // TODO: this seems to fire off two queries for the first page it checks
             // TODO: could the stories/nid view be used to save time when loading the 0th page?
             //       Perhaps it's not necessary to make that big call at all, if we're already fully cached.
-            string queryUrl = StoryNidsUrl + section.Vid + PageArg + (section.LoadedPage + 1);
+            string queryUrl = SunApiAdapter.StoriesUrlOfSection(section);
             downloadData(queryUrl, (sender, e) =>
             {
                 if (e.Error != null)

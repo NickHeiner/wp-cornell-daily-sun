@@ -213,6 +213,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Fixtures\sample-stories.json" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">

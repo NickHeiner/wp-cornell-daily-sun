@@ -18,16 +18,12 @@ namespace CornellSunNewsreader.Models
         public Uri ImageSrc { get; private set; }
         public int Nid { get; private set; }
         public int Vid { get; set; }
-        public Uri CornellSunOnlineUri
-        {
-            get
-            {
-                return SunApiAdapter.StoryUriOfNid(Nid);
-            }
-        }
+        public Uri CornellSunOnlineUri { get; private set; }
 
-        public Story(string body, string teaser, string title, Uri imageSrc, int nid, int vid, string date)
+        public Story(string body, string teaser, string title, Uri imageSrc, int nid, int vid, string date, Uri cornellSunOnlineUrl)
         {
+            CornellSunOnlineUri = cornellSunOnlineUrl;
+
             // these newlines and spaces can break the formatting
             teaser = teaser.Remove("\n").Trim();
             title = title.Remove("\n").Trim();
