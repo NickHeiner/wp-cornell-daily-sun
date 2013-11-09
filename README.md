@@ -10,7 +10,7 @@ This app depends on two APIs made available by CornellSun.com. The interaction w
 **Endpoint**: `/sections.json`
 **Result**: 
 
-```json
+```js
 {
   sections: [
     { name: 'Opinion', vid: 1},
@@ -26,7 +26,7 @@ Each Section is represented by an instance of the [Section class](https://github
 **Endpoint**: `section/wp7/stories/<sectionId>?page=<pageNumber>`
 **Result**:
 
-```json
+```js
 {
   nodes: [
     {
@@ -37,7 +37,8 @@ Each Section is represented by an instance of the [Section class](https://github
       Vid:               2     // the id of the section that this story belongs to
       field_images_nid: 'http:\/\/cornellsun.com\/files\/images\/Pg-3-tcat---VGao-S.preview.jpg' // a thumbnail url
       Date:             '2 September 2013' // a display-ready string representation of the date
-    }
+    },
+    // ... etc
   ]
 }
 ```
