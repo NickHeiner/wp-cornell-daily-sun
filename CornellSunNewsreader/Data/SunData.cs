@@ -34,9 +34,7 @@ namespace CornellSunNewsreader.Data
     // This could be totally buggy, since I changed a lot of it without being able to test much
     public static class SunData
     {
-        public static readonly string CornellSunRootUrl = "http://cornellsun.com/";
-        private static string SectionsUrl = CornellSunRootUrl + "sections.json";
-        private static readonly string StoriesUrl = CornellSunRootUrl + "section/wp7/stories/";
+        private static readonly string StoriesUrl = SunApiAdapter.CornellSunRootUrl + "section/wp7/stories/";
         private static readonly string StoryNidsUrl = StoriesUrl + "nids/";
         private static readonly string PageArg = "?page=";
 
@@ -96,7 +94,7 @@ namespace CornellSunNewsreader.Data
 
         private static void DownloadSections()
         {
-            downloadData(SectionsUrl, data_SectionDownloadCompleted);
+            downloadData(SunApiAdapter.SectionsUrl, data_SectionDownloadCompleted);
         }
 
         static SunData()
@@ -154,10 +152,7 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            JObject jsonData = JObject.Parse(e.Result);
-            JsonSerializer serializer = new JsonSerializer();
-
-            IList<Section> sections = serializer.Deserialize<List<Section>>(new JTokenReader(jsonData["sections"]));
+            IList<Section> sections = SunApiAdapter.SectionsOfApiResponse(e.Result);
 
             // if there is a downloaded section that's not already there, remove it
             foreach (Section section in sections.Where(sect => !_sectionStories.ContainsKey(sect)))

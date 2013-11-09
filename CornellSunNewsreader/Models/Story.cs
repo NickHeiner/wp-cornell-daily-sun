@@ -22,7 +22,7 @@ namespace CornellSunNewsreader.Models
         {
             get
             {
-                return new Uri(SunData.CornellSunRootUrl + "node/" + Nid, UriKind.Absolute);
+                return SunApiAdapter.StoryUriOfNid(Nid);
             }
         }
 
