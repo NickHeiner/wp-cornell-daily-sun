@@ -20,15 +20,5 @@ namespace CornellSunNewsreader.Views
             InitializeComponent();
             LayoutRoot.DataContext = this;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            // this will crash if there is no backstack, but that should never happen
-            // just to be safe, we'll check anyway
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
-        }
     }
 }

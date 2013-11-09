@@ -31,20 +31,22 @@
             <RichTextBox TextWrapping="Wrap">
                 <Paragraph>
                 This app is a labor of love by
-                    <Hyperlink NavigateUri="https://plus.google.com/u/0/117580801177513950006/posts"
+                    <Hyperlink NavigateUri="https://twitter.com/nickheiner"
                                TargetName="_blank">
                         Nick Heiner.</Hyperlink>
                     Please email any comments / feedback / suggestions
                 / bug reports 
-                to me at nth23@cornell.edu.
+                to me at nth23@cornell.edu. The current Cornell Sun tech manager 
+                can be reached at web-editor@cornellsun.com.
+                </Paragraph>
+                <Paragraph>
+                <Hyperlink NavigateUri="https://github.com/NickHeiner/wp-cornell-daily-sun" 
+                           TargetName="_blank">
+                    The code lives on Github.
+                </Hyperlink>
+                Pull requests welcome!
                 </Paragraph>
             </RichTextBox>
-            <TextBlock TextWrapping="Wrap" Margin="12,10">
-                This code sits in a repo owned by the Sun.
-                It's not publicly accessible, 
-                but if you're technically inclined and interested,
-                I can send it to you.
-            </TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="12,10"
                        Style="{StaticResource PhoneTextTitle2Style}">
                 Release History
@@ -70,20 +72,6 @@
                     Mango compatibility, pinching to resize text, pinning sections to start, horizontal story orientation
                 </TextBlock>
             </StackPanel>
-            <Button Click="Button_Click">Back</Button>
         </StackPanel>
     </Grid>
- 
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
-
 </phone:PhoneApplicationPage>

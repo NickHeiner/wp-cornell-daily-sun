@@ -104,6 +104,7 @@
                              Visibility="Collapsed"
                              Style="{StaticResource disabledText}">
                         CornellSun.com could not be reached. Do you have a network connection?
+                        If this error persists, please contact web-editor@cornellsun.com.
                     </TextBlock>
 
                     <ListBox x:Name="sectionList" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="64" 
