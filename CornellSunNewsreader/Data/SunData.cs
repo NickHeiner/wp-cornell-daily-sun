@@ -36,6 +36,7 @@ namespace CornellSunNewsreader.Data
     {
         /// <summary>
         /// Append a story's nid to this to get its comments
+        /// TODO: This may be unneeded - the json response now includes this info
         /// </summary>
         private static readonly string DisqusQuery = "http://disqus.com/api/3.0/threads/listPosts.json?" +
             "api_key=2nOgHjGpcpCtC8udyc4qlik8pGhvanbyppi4YUNttYrOdwoRFvgScXylXfBtBbN2&forum=thecornelldailysun&thread:ident=node/";
@@ -148,10 +149,14 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            IList<Section> sections = SunApiAdapter.SectionsOfApiResponse(e.Result);
+            var sections = SunApiAdapter.SectionsOfApiResponse(e.Result)
+                .Where(section => !section.HasParent)
 
-            // if there is a downloaded section that's not already there, remove it
-            foreach (Section section in sections.Where(sect => !_sectionStories.ContainsKey(sect)))
+                // if there is a downloaded section that's not already there, remove it
+                .Where(sect => !_sectionStories.ContainsKey(sect))
+                .ToList();
+
+            foreach (Section section in sections)
             {
                 _sectionStories[section] = new ObservableCollection<Story>();
             }
@@ -252,10 +257,17 @@ namespace CornellSunNewsreader.Data
             // if the story download hasn't happened yet,
             // and there's nothing in file storage,
             // this will fail
-            return (from sectionStory in getSectionStories()
-                    from story in sectionStory.Value
-                    where story.Nid == nid
-                    select story).Single();
+            var sectionStories = getSectionStories();
+            
+            var storiesWithNid = from sectionStory in sectionStories
+                          from story in sectionStory.Value
+                          where story.Nid == nid
+                          select story;
+
+            Debug.Assert(storiesWithNid.Count() < 2, "Duplicate stories found.");
+            Debug.Assert(storiesWithNid.Count() > 0, "No story found.");
+
+            return storiesWithNid.Single();
         }
 
         internal static Section GetSection(int vid)
@@ -377,10 +389,8 @@ namespace CornellSunNewsreader.Data
                     return;
                 }
 
-                JsonSerializer deserializer = new JsonSerializer();
-                JObject nidData = JObject.Parse(e.Result);
-                IEnumerable<int> nids = from node in nidData["nodes"]
-                                        select deserializer.Deserialize<int>(new JTokenReader(node["node"]["Nid"]));
+                var stories = SunApiAdapter.StoriesOfApiResponse(e.Result);
+                var nids = stories.Select(story => story.Nid);
 
                 // if all the nids on this page are already in memory
                 IEnumerable<int> existingNids = _sectionStories[section].Select(story => story.Nid);

@@ -34,6 +34,8 @@ namespace CornellSunNewsreader
 
         [JsonProperty("id")]
         public int Nid { get; set; }
+
+        // TODO I'm not totally sure what this field is used for.
         public int Vid { get; set; }
 
         // TODO: Right now this will pull the creation date, but we could also do interesting things with date_modified.

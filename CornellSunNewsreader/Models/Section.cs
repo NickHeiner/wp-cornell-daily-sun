@@ -45,6 +45,17 @@ namespace CornellSunNewsreader.Models
         [JsonProperty("slug")]
         public string Slug { get; set; }
 
+        [JsonProperty("parent")]
+        public int ParentId { get; set; }
+
+        public bool HasParent
+        {
+            get
+            {
+                return ParentId != 0;
+            }
+        }
+
         public Uri Page
         {
             get
