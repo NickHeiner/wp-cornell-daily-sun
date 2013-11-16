@@ -26,7 +26,6 @@ namespace CornellSunNewsreader.Models
             CornellSunOnlineUri = cornellSunOnlineUrl;
 
             // these newlines and spaces can break the formatting
-            teaser = teaser.Remove("\n").Trim();
             title = title.Remove("\n").Trim();
 
             body = HttpUtility.HtmlDecode(body).Trim();
@@ -34,25 +33,13 @@ namespace CornellSunNewsreader.Models
             title = HttpUtility.HtmlDecode(title);
 
             Body = body.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
-            Teaser = getTeaser(teaser);
+            Teaser = SunResponseParser.GetTeaser(teaser);
             Title = title;
             ImageSrc = imageSrc;
             Nid = nid;
             Vid = vid;
             // Legacy: date may not exist in locally cached stories
             Date = date != null ? date.Trim() : "";
-        }
-
-        private string getTeaser(string teaserHtml)
-        {
-            if (teaserHtml == "")
-            {
-                return "";
-            }
-
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(teaserHtml);
-            return doc.DocumentNode.Elements("p").First().InnerText;
         }
 
         public StoryJson ToStoryJson()

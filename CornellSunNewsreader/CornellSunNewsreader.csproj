@@ -126,6 +126,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\SunApiAdapter.cs" />
+    <Compile Include="Data\SunResponseParser.cs" />
     <Compile Include="Models\CommentJson.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
