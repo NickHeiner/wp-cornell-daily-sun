@@ -50,8 +50,8 @@ namespace CornellSunNewsreader.Data
 
         private static Story storyOfJson(JsonSerializer serializer, JToken storyData)
         {
-            StoryJson storyJson = serializer.Deserialize<StoryJson>(new JTokenReader(storyData));
-            return storyJson.ToStory();
+            SunSpecificStory sunSpecificStory = serializer.Deserialize<SunSpecificStory>(new JTokenReader(storyData));
+            return sunSpecificStory.ToStoryJson().ToStory();
         }
     }
 }

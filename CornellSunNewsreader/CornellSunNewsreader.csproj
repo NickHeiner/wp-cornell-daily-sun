@@ -134,6 +134,7 @@
     <Compile Include="Models\NavigableItem.cs" />
     <Compile Include="Data\Storage.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SunSpecificStory.cs" />
     <Compile Include="ViewModels\SectionViewModel.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Models\Favorite.cs" />

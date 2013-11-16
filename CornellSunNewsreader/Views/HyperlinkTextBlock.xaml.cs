@@ -102,13 +102,11 @@ namespace CornellSunNewsreader.Views
 
                 if (EMAIL_REGEX.IsMatch(entireLink.Value))
                 {
-                    
+                    // TODO this is deprecated, but I'm not sure what the new preferred method is.
                     GestureService.GetGestureListener(href);
                     href.Click += (s, r) =>
                     {
-                        MessageBox.Show("href clicked");
                         new EmailComposeTask() { To = entireLink.Value }.Show();
-
                     };
                     href.Inlines.Add(new Run() { Text = entireLink.Value });
                 }

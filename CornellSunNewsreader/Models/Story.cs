@@ -9,6 +9,9 @@ using HtmlAgilityPack;
 
 namespace CornellSunNewsreader.Models
 {
+    /// <summary>
+    /// The runtime representation of a story.
+    /// </summary>
     [JsonObject(MemberSerialization.OptOut)]   
     public class Story : NavigableItem
     {
@@ -21,19 +24,11 @@ namespace CornellSunNewsreader.Models
         public int Vid { get; set; }
         public Uri CornellSunOnlineUri { get; private set; }
 
-        public Story(string body, string teaser, string title, Uri imageSrc, int nid, int vid, string date, Uri cornellSunOnlineUrl)
+        public Story(IList<string> body, string teaser, string title, Uri imageSrc, int nid, int vid, string date, Uri cornellSunOnlineUrl)
         {
             CornellSunOnlineUri = cornellSunOnlineUrl;
-
-            // these newlines and spaces can break the formatting
-            title = title.Remove("\n").Trim();
-
-            body = HttpUtility.HtmlDecode(body).Trim();
-            teaser = HttpUtility.HtmlDecode(teaser);
-            title = HttpUtility.HtmlDecode(title);
-
-            Body = SunResponseParser.GetBody(body);
-            Teaser = SunResponseParser.GetTeaser(teaser);
+            Body = body;
+            Teaser = teaser;
             Title = title;
             ImageSrc = imageSrc;
             Nid = nid;
@@ -44,10 +39,19 @@ namespace CornellSunNewsreader.Models
 
         public StoryJson ToStoryJson()
         {
-            string body = String.Join("\n", Body.ToArray<String>());
             string imageSrcStr = ImageSrc == null ? null : ImageSrc.AbsolutePath;
 
-            return new StoryJson() { Title = Title, Body = body, field_images_nid = imageSrcStr, Nid = Nid, Teaser = Teaser, Vid = Vid, Date = Date };
+            return new StoryJson() 
+            { 
+                Title = Title, 
+                Body = Body, 
+                field_images_nid = imageSrcStr, 
+                Nid = Nid, 
+                Teaser = Teaser, 
+                Vid = Vid, 
+                Date = Date, 
+                CornellSunOnlineUrl = CornellSunOnlineUri.AbsoluteUri 
+            };
         }
 
         public override Boolean Equals(Object obj)
