@@ -24,5 +24,20 @@ namespace CornellSunNewsreader.Data
             doc.LoadHtml(teaserHtml);
             return doc.DocumentNode.Elements("p").First().InnerText;
         }
+
+        internal static IList<string> GetBody(string bodyHtml)
+        {
+            if (bodyHtml == "")
+            {
+                return new List<string>();
+            }
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(bodyHtml);
+
+            // TODO There is more html in the story, like <a>, <img>, and <em>, and this will ignore all that.
+            // It would be nice to handle that appropriately.
+            return doc.DocumentNode.Elements("p").Select(p => p.InnerText).ToList();
+        }
     }
 }

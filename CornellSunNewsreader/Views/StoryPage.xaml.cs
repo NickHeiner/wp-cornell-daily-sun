@@ -21,6 +21,7 @@ using System.ComponentModel;
 
 namespace CornellSunNewsreader
 {
+    // TODO does flipping the phone orientation change the text of the currently active story without changing the image?
     public partial class StoryPage : PhoneApplicationPage
     {
         public static readonly double APP_BAR_ACTIVE_OPACITY = 1;

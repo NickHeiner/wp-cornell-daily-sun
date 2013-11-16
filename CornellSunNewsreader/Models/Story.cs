@@ -32,7 +32,7 @@ namespace CornellSunNewsreader.Models
             teaser = HttpUtility.HtmlDecode(teaser);
             title = HttpUtility.HtmlDecode(title);
 
-            Body = body.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
+            Body = SunResponseParser.GetBody(body);
             Teaser = SunResponseParser.GetTeaser(teaser);
             Title = title;
             ImageSrc = imageSrc;
