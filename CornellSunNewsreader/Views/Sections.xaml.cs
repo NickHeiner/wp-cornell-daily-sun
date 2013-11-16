@@ -79,8 +79,6 @@ namespace CornellSunNewsreader
                 ObservableCollection<SectionViewModel> sectionVMs = new ObservableCollection<SectionViewModel>();
                 sectionVMs.AddAll(reordered.ToList());
 
-                pivotControl.SelectedItem = sectionVMs[0];
-
                 return sectionVMs;
             }
         }

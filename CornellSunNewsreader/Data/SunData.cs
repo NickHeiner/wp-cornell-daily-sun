@@ -150,21 +150,13 @@ namespace CornellSunNewsreader.Data
             }
 
             var sections = SunApiAdapter.SectionsOfApiResponse(e.Result)
-                .Where(section => !section.HasParent)
-
-                // if there is a downloaded section that's not already there, remove it
-                .Where(sect => !_sectionStories.ContainsKey(sect))
-                .ToList();
+                // Just ignore subsections. Maybe later this app will handle them in some 
+                // interesting way, but for now let's simplify.
+                .Where(section => !section.HasParent);
 
             foreach (Section section in sections)
             {
                 _sectionStories[section] = new ObservableCollection<Story>();
-            }
-
-            // if there's a section in the dictionary already, but it wasn't downloaded from the Sun, remove it
-            foreach (Section sect in _sectionStories.Keys.Where(sect => !sections.Contains(sect)))
-            {
-                _sectionStories.Remove(sect);
             }
 
             if (SectionsAcquired != null)
