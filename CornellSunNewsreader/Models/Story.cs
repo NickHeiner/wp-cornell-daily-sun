@@ -5,6 +5,7 @@ using System.Net;
 using Newtonsoft.Json;
 using CornellSunNewsreader;
 using CornellSunNewsreader.Data;
+using HtmlAgilityPack;
 
 namespace CornellSunNewsreader.Models
 {
@@ -33,13 +34,25 @@ namespace CornellSunNewsreader.Models
             title = HttpUtility.HtmlDecode(title);
 
             Body = body.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
-            Teaser = teaser;
+            Teaser = getTeaser(teaser);
             Title = title;
             ImageSrc = imageSrc;
             Nid = nid;
             Vid = vid;
             // Legacy: date may not exist in locally cached stories
             Date = date != null ? date.Trim() : "";
+        }
+
+        private string getTeaser(string teaserHtml)
+        {
+            if (teaserHtml == "")
+            {
+                return "";
+            }
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(teaserHtml);
+            return doc.DocumentNode.Elements("p").First().InnerText;
         }
 
         public StoryJson ToStoryJson()
