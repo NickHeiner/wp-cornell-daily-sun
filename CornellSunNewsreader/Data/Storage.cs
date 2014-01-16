@@ -18,6 +18,9 @@ using System.Diagnostics;
 
 namespace CornellSunNewsreader.Data
 {
+    /// <summary>
+    /// TODO Implement versioning so a cache with old data won't cause a problem.
+    /// </summary>
     public static class Storage
     {
         private static readonly string SettingsFile = "settings.json";

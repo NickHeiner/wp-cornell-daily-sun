@@ -28,8 +28,6 @@ namespace CornellSunNewsreader.Views
 
             Loaded += (s, e) =>
                 {
-                    //MessageBox.Show(ToString() + " loaded. StateId is: " + StateId);
-                    
                     if (!double.IsNaN(StateVerticalOffset))
                     {
                         CurrentVerticalOffset = StateVerticalOffset;
@@ -106,7 +104,7 @@ namespace CornellSunNewsreader.Views
 
         private static void onStoryViewModelsChanged(DependencyObject dependObj, DependencyPropertyChangedEventArgs e)
         {
-            // MessageBox.Show("Story view models set to " + e.NewValue.ToString());
+            // TODO does this method need to exist?
         }
 
         public IEnumerable<StoryViewModel> StoryViewModels

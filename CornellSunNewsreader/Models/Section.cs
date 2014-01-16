@@ -15,6 +15,20 @@ using Newtonsoft.Json;
 
 namespace CornellSunNewsreader.Models
 {
+    /// <summary>
+    /// 
+    /// The Section json that we get looks like:
+    /// 
+    /// {
+    ///    id: 10,
+    ///    slug: "music", // this is the param to the story endpoint to look up stories for this section
+    ///    title: "Music",
+    ///    description: "",
+    ///    parent: 3, // id of parent section. if 0, this is a toplevel section
+    ///    post_count: 43
+    ///  }
+    /// 
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class Section : NavigableItem
     {
@@ -22,11 +36,25 @@ namespace CornellSunNewsreader.Models
 
         public bool Enabled { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty("title")]
         public string Name { get; set; }
 
-        [JsonProperty("vid")]
+        [JsonProperty("id")]
         public int Vid { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("parent")]
+        public int ParentId { get; set; }
+
+        public bool HasParent
+        {
+            get
+            {
+                return ParentId != 0;
+            }
+        }
 
         public Uri Page
         {
