@@ -42,6 +42,9 @@ namespace CornellSunNewsreader.Models
         [JsonProperty("categories")]
         public IList<Section> sections { get; set; }
 
+        [JsonProperty("attachments")]
+        public IList<Attachment> attachments { get; set; }
+
         public StoryJson ToStoryJson()
         {
             int vid = sections
@@ -52,6 +55,17 @@ namespace CornellSunNewsreader.Models
                 .OrderBy(id => id)
                 .First();
 
+            string imageSrc = null;
+
+            if (attachments != null && attachments.Count > 0)
+            {
+                var images = attachments.Where(a => a.mimeType.StartsWith("image"));
+                if (images.Count() > 0) 
+                {
+                    imageSrc = images.First().url;
+                }
+            }
+
             // TODO it may be necessary to use HttpUtility.HtmlDecode on some fields, or trim() them
             return new StoryJson()
             {
@@ -61,8 +75,22 @@ namespace CornellSunNewsreader.Models
                 Nid = Nid,
                 Vid = vid,
                 Date = Date,
-                CornellSunOnlineUrl = CornellSunOnlineUrl
+                CornellSunOnlineUrl = CornellSunOnlineUrl,
+                imageSrc = imageSrc
             };
         }
+    }
+
+    /// <summary>
+    /// Represents an object in the "attachments" array.
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    public class Attachment
+    {
+        [JsonProperty("url")]
+        public string url { get; set; }
+
+        [JsonProperty("mime_type")]
+        public string mimeType { get; set; }
     }
 }

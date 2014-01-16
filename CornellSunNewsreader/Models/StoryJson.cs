@@ -63,12 +63,21 @@ namespace CornellSunNewsreader
         [JsonProperty("url")]
         public string CornellSunOnlineUrl { get; set; }
 
+        [JsonProperty("imageSrc")]
+        public string imageSrc { get; set; }
+
         public Story ToStory()
         {
-            // TODO: Actually handle images
-            Uri imageSrcUri = new Uri("http://cornellsun.com/wp-content/uploads/2013/11/Pg-20-Hockey-Joel-Lowry-by-Michelle-Feldman-Staff.jpg", UriKind.Absolute);
-            return new Story(Body, Teaser, Title, imageSrcUri, Nid, Vid, Date, new Uri(CornellSunOnlineUrl, UriKind.Absolute));
+            Uri imageUri = null;
+
+            if (imageSrc != null) 
+            {
+                imageUri = new Uri(imageSrc, UriKind.Absolute);
+            }
+
+            return new Story(Body, Teaser, Title, imageUri, Nid, Vid, Date, new Uri(CornellSunOnlineUrl, UriKind.Absolute));
         }
 
     }
+
 }
