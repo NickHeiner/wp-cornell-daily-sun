@@ -45,6 +45,9 @@ namespace CornellSunNewsreader.Models
         [JsonProperty("attachments")]
         public IList<Attachment> attachments { get; set; }
 
+        [JsonProperty("comments")]
+        public IList<CommentJson> comments { get; set; }
+
         /// <summary>
         /// Sometimes, we'll request the stories for a section, with a url like 
         /// 
@@ -114,7 +117,8 @@ namespace CornellSunNewsreader.Models
                 Vid = vid,
                 Date = Date,
                 CornellSunOnlineUrl = CornellSunOnlineUrl,
-                imageSrc = imageSrc
+                imageSrc = imageSrc,
+                Comments = comments
             };
         }
     }

@@ -66,5 +66,32 @@ namespace CornellSunNewsreader.Data
             SunSpecificStory sunSpecificStory = serializer.Deserialize<SunSpecificStory>(new JTokenReader(storyData));
             return sunSpecificStory.ToStoryJson().ToStory();
         }
+
+        internal static IList<Comment> CommentsOfCommentJsons(IEnumerable<CommentJson> commentJsons)
+        {
+            return commentJsons
+                .Where(commentJson => !commentJson.HasParent)
+
+                // It would be nice to get some partial application here. F#, anyone?
+                .Select(commentJson => commentOfCommentJson(commentJson, commentJsons))
+                
+                .ToList();
+        }
+
+        private static Comment commentOfCommentJson(CommentJson commentJson, IEnumerable<CommentJson> allComments)
+        {
+            return new Comment(
+                CommentsOfCommentJsons(getChildrenOf(commentJson, allComments)),
+                commentJson.Message,
+                commentJson.Name,
+                DateTime.Parse(commentJson.CreatedAt).ToLocalTime()
+            );
+        }
+
+        private static IEnumerable<CommentJson> getChildrenOf(CommentJson commentJson, IEnumerable<CommentJson> allComments)
+        {
+            return allComments.Where(comment => comment.Parent == commentJson.Id);
+        }
+
     }
 }

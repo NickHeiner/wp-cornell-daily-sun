@@ -34,13 +34,6 @@ namespace CornellSunNewsreader.Data
     // This could be totally buggy, since I changed a lot of it without being able to test much
     public static class SunData
     {
-        /// <summary>
-        /// Append a story's nid to this to get its comments
-        /// TODO: This may be unneeded - the json response now includes this info
-        /// </summary>
-        private static readonly string DisqusQuery = "http://disqus.com/api/3.0/threads/listPosts.json?" +
-            "api_key=2nOgHjGpcpCtC8udyc4qlik8pGhvanbyppi4YUNttYrOdwoRFvgScXylXfBtBbN2&forum=thecornelldailysun&thread:ident=node/";
-
         public static event EventHandler SectionsAcquired;
 
         /// <summary>
@@ -276,106 +269,12 @@ namespace CornellSunNewsreader.Data
             return getSectionStories().Where(keyValue => keyValue.Key.Vid == vid).Single().Key;
         }
 
-        private class CommentTuple
-        {
-            public CommentJson CommentJson { get; set; }
-            public String AuthorName { get; set; }
-            public Uri AuthorAvatar { get; set; }
-            private IList<CommentTuple> _children;
-
-            public void SetChild(List<CommentTuple> children)
-            {
-                _children = children;
-            }
-
-            public Comment AsComment()
-            {
-                return new Comment(CommentJson, AuthorName, AuthorAvatar, _children.Select(commentTuple => commentTuple.AsComment()).ToList());
-            }
-        }
-
-        // TODO: cache this
-        internal static ObservableCollection<Comment> GetComments(int nid, Action onFailure)
-        {
-            ObservableCollection<Comment> commentCollection = new ObservableCollection<Comment>();
-            WebClient webClient = new WebClient();
-
-            // http://stackoverflow.com/questions/7216738/your-api-key-is-not-valid-on-this-domain-when-calling-disqus-from-wp7
-            webClient.Headers[HttpRequestHeader.Referer] = "http://disqus.com";
-
-            Uri queryUri = new Uri(DisqusQuery + nid, UriKind.Absolute);
-            webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler((sender, downloadEvent) =>
-            {
-                if (downloadEvent.Error != null)
-                {
-                    Debug.WriteLine(String.Format("Download failed for comments ({0}): {1}", queryUri, downloadEvent.Error));
-                    // use onFailure() instead of DownloadFailed.
-                    // Those listening for DownloadFailed may not realize that the comments were the failure, as opposed to sections.
-                    // Just take a onFailure callback.
-                    // Really, this whole "load content and display it or an error message" could have a better generic solution.
-                    onFailure();
-                    return;
-                }
-
-                try
-                {
-                    // TODO: is this sorted by date?
-                    JObject commentData = JObject.Parse(downloadEvent.Result);
-
-                    JsonSerializer deserializer = new JsonSerializer();
-
-                    Debug.Assert(commentData["code"].ToString() == "0", "API returned error code: " + commentData["code"]);
-
-                    List<CommentTuple> commentTuples =
-                                   (from comment in commentData["response"]
-                                    where checkCondition(comment["isApproved"]) && !checkCondition(comment["isDeleted"]) && !checkCondition(comment["isSpam"])
-                                    let commentJson = commentJsonOfJson(deserializer, comment)
-                                    let avatarUri = comment["author"]["avatar"]["permalink"].AsString()
-                                    select new CommentTuple()
-                                    {
-                                        CommentJson = commentJson,
-                                        AuthorName = comment["author"]["name"].AsString(),
-                                        AuthorAvatar = avatarUri.Contains(Comment.NO_AVATAR) ? null : new Uri(avatarUri, UriKind.Absolute)
-                                    }).ToList();
-
-                    foreach (CommentTuple parent in commentTuples)
-                    {
-                        parent.SetChild(commentTuples.Where(tuple => tuple.CommentJson.Parent == parent.CommentJson.Id).ToList());
-                    }
-
-                    commentCollection.AddAll((from tuple in commentTuples
-                                              where tuple.CommentJson.Parent == null
-                                              select tuple.AsComment()).ToList());
-                }
-                catch (JsonReaderException)
-                {
-                    Debug.Assert(false, "Why couldn't the JSON be parsed?");
-                    DownloadFailed(sender, downloadEvent);
-                }
-            });
-
-            webClient.DownloadStringAsync(queryUri);
-
-            return commentCollection;
-        }
-
-        private static CommentJson commentJsonOfJson(JsonSerializer deserializer, JToken data)
-        {
-            return deserializer.Deserialize<CommentJson>(new JTokenReader(data));
-        }
-
-        private static bool checkCondition(JToken flag)
-        {
-            return bool.Parse(flag.ToString());
-        }
-
         // Find the first page of story data that contains stories we don't already have,
         // then load that page.
         //
         // This could possibly be done much more simply on the server side
         // Just have a service that returns the page number we need
-        // However, I'd rather minimize the dependency on Drupal as much as possible
-        // and PHP sucks fat donkey dick.
+        // However, I'd rather minimize the serverside dependency, since it can break without notice.
         internal static void GetMoreStories(Section section)
         {
             // TODO: this seems to fire off two queries for the first page it checks
