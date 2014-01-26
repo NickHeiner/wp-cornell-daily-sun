@@ -50,6 +50,8 @@ namespace CornellSunNewsreader.Data
 
         public static IEnumerable<Section> GetSections()
         {
+            // It seems like we should throw an OrderBy in here to ensure that the sort is consistent,
+            // but I haven't seen a need for this yet so w/e.
             return getSectionStories().Keys;
         }
 

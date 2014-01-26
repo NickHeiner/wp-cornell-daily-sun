@@ -42,9 +42,6 @@ namespace CornellSunNewsreader
         {
             get
             {
-                // this returns a new collection each time, ordered such that the section 
-                // we are currently viewing is at the front of the list.
-
                 // don't do anything if we haven't loaded yet
                 if (NavigationContext == null)
                 {
@@ -66,12 +63,16 @@ namespace CornellSunNewsreader
             }
         }
 
-        private int getActiveSectionIndex()
+        private bool hasActiveSectionViewModel()
+        {
+            return NavigationContext.QueryString.ContainsKey(Section.SectionsKey);
+        }
+
+        private SectionViewModel getActiveSectionViewModel()
         {
             int activeVID = int.Parse(NavigationContext.QueryString[Section.SectionsKey]);
-
-            SectionViewModel selectedItem = _sectionViewModels.Where(sectionVM => sectionVM.Section.Vid == activeVID).Single();
-            return _sectionViewModels.IndexOf(selectedItem);
+            var sectionViewModel = SectionViewModels.Where(sectionVM => sectionVM.Section.Vid == activeVID).Single();
+            return sectionViewModel;
         }
 
         public Sections()
@@ -111,6 +112,14 @@ namespace CornellSunNewsreader
         void Sections_Loaded(object sender, RoutedEventArgs e)
         {
             onPropChanged("SectionViewModels");
+
+            // PivotControl now remembers its selected item,
+            // so when we navigate away from this page and then navigate back, 
+            // this code actually isn't necessary. But we do need it when we're
+            // navigating to this page for the first time, and only running it
+            // in that circumstance adds complexity, so we'll just do this every time.
+            var selected = getActiveSectionViewModel();
+            pivotControl.SelectedItem = selected; 
         }
 
         void SunData_DownloadFailed(object sender, DownloadStringCompletedEventArgs e)
@@ -121,28 +130,18 @@ namespace CornellSunNewsreader
             }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            // if nothing has been selected, then the page is still loading
-            // don't bother setting QueryString to be something different
-            if (pivotControl.SelectedItem != null)
-            {
-                pivotControl.SelectedIndex = getActiveSectionIndex(); 
-            }
-
-            base.OnNavigatedTo(e);
-        }
-
         // TODO: remember what the scroll value is, and reset the user to that position when we return
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            base.OnNavigatedFrom(e);
+
             // if nothing has been selected, then the page is still loading
             // don't bother setting QueryString to be something different
             if (pivotControl.SelectedItem != null)
             {
                 NavigationContext.QueryString[Section.SectionsKey] = ((SectionViewModel)pivotControl.SelectedItem).Section.Vid.ToString();
             }
-            base.OnNavigatedFrom(e);
+            
         }
 
         #region INotifyPropertyChanged Members
@@ -183,6 +182,10 @@ namespace CornellSunNewsreader
 
         private void pivotControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // For some reason this gets event gets fired twice when loading the page from the main screen,
+            // and the second time, SelectdItem is null. That makes it select the first item instead of the 
+            // one that was actually selected.
+
             // When we first set pivotControl.SelectedItem to be something, it will fire an event
             // while the selected item is null. If we get that event, just ignore it.
             if (pivotControl.SelectedItem != null)
