@@ -27,7 +27,7 @@ namespace CornellSunNewsreader.Models
             }
         }
 
-        public string Message { get; private set; }
+        public IList<string> Paragraphs { get; private set; }
         public string AuthorName { get; private set; }
         public Uri AuthorAvatar { get; private set; }
 
@@ -48,10 +48,10 @@ namespace CornellSunNewsreader.Models
         public string LikesText { get { return Likes > 0 ? string.Format("({0} likes)", Likes) : string.Empty; } }
         public int Likes { get; private set; }
 
-        public Comment(IList<Comment> children, string message, string authorName, DateTime created)
+        public Comment(IList<Comment> children, IList<string> paragraphs, string authorName, DateTime created)
         {
             _children = children;
-            Message = message;
+            Paragraphs = paragraphs;
             AuthorName = authorName;
             _created = created;
         }

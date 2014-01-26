@@ -33,7 +33,7 @@ namespace CornellSunNewsreader.Data
             );
         }
 
-        private static IList<string> getParagraphsFrom(HtmlDocument doc, string tagname)
+        private static IList<string> getTextFromTag(HtmlDocument doc, string tagname)
         {
             return doc
                 .DocumentNode
@@ -64,8 +64,8 @@ namespace CornellSunNewsreader.Data
             doc.LoadHtml(bodyHtml);
 
             return doc.DocumentNode.Elements("p").Count() > 0 ? 
-                getParagraphsFrom(doc, "p") :
-                getParagraphsFrom(doc, "div");
+                getTextFromTag(doc, "p") :
+                getTextFromTag(doc, "div");
         }
 
         internal static string GetTitle(string title)

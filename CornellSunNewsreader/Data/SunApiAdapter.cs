@@ -82,7 +82,7 @@ namespace CornellSunNewsreader.Data
         {
             return new Comment(
                 CommentsOfCommentJsons(getChildrenOf(commentJson, allComments)),
-                commentJson.Message,
+                SunResponseParser.GetBody(commentJson.Message),
                 commentJson.Name,
                 DateTime.Parse(commentJson.CreatedAt).ToLocalTime()
             );
