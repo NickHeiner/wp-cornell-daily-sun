@@ -62,25 +62,16 @@ namespace CornellSunNewsreader
                     }
                 }
 
-                // re-index the source so we don't get an annoying transition animation
-                // http://stackoverflow.com/questions/4541020/
-                int activeVID = int.Parse(NavigationContext.QueryString[Section.SectionsKey]);
-
-                SectionViewModel selectedItem = _sectionViewModels.Where(sectionVM => sectionVM.Section.Vid == activeVID).Single();
-                int selectedIndex = _sectionViewModels.IndexOf(selectedItem);
-
-                Queue<SectionViewModel> reordered = new Queue<SectionViewModel>(_sectionViewModels);
-                for (int i = 0; i < selectedIndex; i++)
-                {
-                    // pop an item from the list and push it to the end
-                    reordered.Enqueue(reordered.Dequeue());
-                }
-
-                ObservableCollection<SectionViewModel> sectionVMs = new ObservableCollection<SectionViewModel>();
-                sectionVMs.AddAll(reordered.ToList());
-
-                return sectionVMs;
+                return _sectionViewModels;
             }
+        }
+
+        private int getActiveSectionIndex()
+        {
+            int activeVID = int.Parse(NavigationContext.QueryString[Section.SectionsKey]);
+
+            SectionViewModel selectedItem = _sectionViewModels.Where(sectionVM => sectionVM.Section.Vid == activeVID).Single();
+            return _sectionViewModels.IndexOf(selectedItem);
         }
 
         public Sections()
@@ -130,6 +121,18 @@ namespace CornellSunNewsreader
             }
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // if nothing has been selected, then the page is still loading
+            // don't bother setting QueryString to be something different
+            if (pivotControl.SelectedItem != null)
+            {
+                pivotControl.SelectedIndex = getActiveSectionIndex(); 
+            }
+
+            base.OnNavigatedTo(e);
+        }
+
         // TODO: remember what the scroll value is, and reset the user to that position when we return
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -138,8 +141,6 @@ namespace CornellSunNewsreader
             if (pivotControl.SelectedItem != null)
             {
                 NavigationContext.QueryString[Section.SectionsKey] = ((SectionViewModel)pivotControl.SelectedItem).Section.Vid.ToString();
-                // pivotControl.ItemTemplate.
-                // NavigationContext.QueryString["scrollVerticalOffset"] = ((VisualTreeHelper.GetChild(listBox, 0) as FrameworkElement).FindName("ScrollViewer") as ScrollViewer).VerticalOffset;
             }
             base.OnNavigatedFrom(e);
         }
