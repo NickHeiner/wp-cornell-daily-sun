@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using CornellSunNewsreader.Models;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,26 @@ namespace CornellSunNewsreader.Data
             );
         }
 
+        private static IList<string> getTextFromTag(HtmlDocument doc, string tagname)
+        {
+            return doc
+                .DocumentNode
+                .Elements(tagname)
+                .Select(elem => elem.InnerText)
+                .Select(HttpUtility.HtmlDecode)
+                .Where(str => str != "")
+                .ToList();
+        }
+
+        /// <summary>
+        /// We get the story as an html formatted blob. It's kind of a bummer to recreate a rendering engine in this app.
+        /// Ideally, we would just use a WebBrowser control to display the html. But I'm not sure how to do that and still
+        /// maintain the look-and-feel of the surrounding app. Figuring out how to translate App resource dictionary content
+        /// into CSS sounds like a fucking pain. So I'll just settle for a few hacks here and there that will hopefully 
+        /// be good enough. My first approach was to just pull out all the p tags, but then some Opinion articles have divs 
+        /// intead of p's. I could easily see this approach becoming a patchwork mess of one-off rules meant to catch various
+        /// cases that the API may return, whilst being utterly brittle against new changes. Woo.
+        /// </summary>
         internal static IList<string> GetBody(string bodyHtml)
         {
             if (bodyHtml == "")
@@ -42,14 +63,9 @@ namespace CornellSunNewsreader.Data
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(bodyHtml);
 
-            // TODO There is more html in the story, like <a>, <img>, and <em>, and this will ignore all that.
-            // It would be nice to handle that appropriately.
-            return doc
-                .DocumentNode
-                .Elements("p")
-                .Select(p => p.InnerText)
-                .Select(HttpUtility.HtmlDecode)
-                .ToList();
+            return doc.DocumentNode.Elements("p").Count() > 0 ? 
+                getTextFromTag(doc, "p") :
+                getTextFromTag(doc, "div");
         }
 
         internal static string GetTitle(string title)

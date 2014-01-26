@@ -22,13 +22,12 @@ namespace CornellSunNewsreader.ViewModels
     public class StoryViewModel : INotifyPropertyChanged
     {
         public Story Story { get; private set; }
-        private ObservableCollection<Comment> _comments;
 
-        public ObservableCollection<Comment> Comments
+        public IList<Comment> Comments
         {
             get
             {
-                return _comments;
+                return Story.Comments;
             }
         }
 
@@ -63,12 +62,6 @@ namespace CornellSunNewsreader.ViewModels
         {
             this.Story = story;
             SunData.GetFavorites().CollectionChanged += new NotifyCollectionChangedEventHandler(StoryViewModel_CollectionChanged);
-        }
-
-        public StoryViewModel(Story story, ObservableCollection<Comment> comments)
-            : this(story)
-        {
-            _comments = comments;
         }
 
         void StoryViewModel_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

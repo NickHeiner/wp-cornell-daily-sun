@@ -23,8 +23,9 @@ namespace CornellSunNewsreader.Models
         public int Nid { get; private set; }
         public int Vid { get; set; }
         public Uri CornellSunOnlineUri { get; private set; }
+        public IList<Comment> Comments { get; private set; }
 
-        public Story(IList<string> body, string teaser, string title, Uri imageSrc, int nid, int vid, string date, Uri cornellSunOnlineUrl)
+        public Story(IList<string> body, string teaser, string title, Uri imageSrc, int nid, int vid, string date, Uri cornellSunOnlineUrl, IList<Comment> comments)
         {
             CornellSunOnlineUri = cornellSunOnlineUrl;
             Body = body;
@@ -35,6 +36,7 @@ namespace CornellSunNewsreader.Models
             Vid = vid;
             // Legacy: date may not exist in locally cached stories
             Date = date != null ? date.Trim() : "";
+            Comments = comments;
         }
 
         public StoryJson ToStoryJson()

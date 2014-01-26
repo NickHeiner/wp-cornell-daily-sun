@@ -47,9 +47,8 @@ namespace CornellSunNewsreader
         {
             int nid = int.Parse(NavigationContext.QueryString["nid"]);
 
-            // TODO: getting comments may be contributing to a laggy page transition. Perhaps do this after the page transition completes?
             Story story = SunData.getStory(nid);
-            LayoutRoot.DataContext = new StoryViewModel(story, SunData.GetComments(nid, () => { /* TODO: on comment failure */ }));
+            LayoutRoot.DataContext = new StoryViewModel(story);
         }
 
         void SectionTitle_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)

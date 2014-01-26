@@ -22,7 +22,17 @@
                        VerticalAlignment="Center" />
             <TextBlock Text="{Binding Created, Converter={StaticResource ThreadDateTimeConverter}}" Style="{StaticResource PhoneTextAccentStyle}" VerticalAlignment="Center"/>
         </toolkit:WrapPanel>
-        <local:HyperlinkTextBlock Text="{Binding Message}" Suffix="{Binding LikesText}" />
+
+        <ItemsControl ItemsSource="{Binding Paragraphs}" x:Name="ParagraphItems">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" HyperlinkFontSize="{Binding ElementName=ParagraphItems, Path=DataContext.TextScale}"  />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <ItemsControl ItemsSource="{Binding Children}" Margin="30,0,0,0">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

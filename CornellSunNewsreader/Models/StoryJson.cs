@@ -66,6 +66,9 @@ namespace CornellSunNewsreader
         [JsonProperty("imageSrc")]
         public string imageSrc { get; set; }
 
+        [JsonProperty("comments")]
+        public IList<CommentJson> Comments { get; set; }
+
         public Story ToStory()
         {
             Uri imageUri = null;
@@ -75,7 +78,17 @@ namespace CornellSunNewsreader
                 imageUri = new Uri(imageSrc, UriKind.Absolute);
             }
 
-            return new Story(Body, Teaser, Title, imageUri, Nid, Vid, Date, new Uri(CornellSunOnlineUrl, UriKind.Absolute));
+            return new Story(
+                Body, 
+                Teaser, 
+                Title, 
+                imageUri, 
+                Nid, 
+                Vid, 
+                Date, 
+                new Uri(CornellSunOnlineUrl, UriKind.Absolute), 
+                SunApiAdapter.CommentsOfCommentJsons(Comments)
+            );
         }
 
     }

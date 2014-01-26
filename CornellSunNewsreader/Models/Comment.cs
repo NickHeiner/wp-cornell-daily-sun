@@ -19,19 +19,6 @@ namespace CornellSunNewsreader.Models
         public static string NO_AVATAR = "http://mediacdn.disqus.com/1316029528/images/noavatar32.png";
 
         private IList<Comment> _children;
-
-        public Comment(CommentJson commentJson, string authorName, Uri authorAvatar, IList<Comment> children)
-        {
-            Message = HttpUtility.HtmlDecode(commentJson.Message.Replace("<br>", "\n"));
-            AuthorName = authorName;
-            AuthorAvatar = authorAvatar;
-
-            // Comment creation time will be given in UTC, so we must convert to local time
-            _created = DateTime.Parse(commentJson.CreatedAt).ToLocalTime();
-            Likes = commentJson.Likes;
-            _children = children;
-        }
-
         public IEnumerable<Comment> Children
         {
             get
@@ -40,7 +27,7 @@ namespace CornellSunNewsreader.Models
             }
         }
 
-        public string Message { get; private set; }
+        public IList<string> Paragraphs { get; private set; }
         public string AuthorName { get; private set; }
         public Uri AuthorAvatar { get; private set; }
 
@@ -56,10 +43,17 @@ namespace CornellSunNewsreader.Models
             }
         }
 
-        public Visibility AvatarVisiblity { get { return AuthorAvatar == null ? Visibility.Collapsed : Visibility.Visible; } }
-
+        // TODO none of these are returned by the new API. Let's get rid of them.
+        public Visibility AvatarVisiblity { get { return Visibility.Collapsed; } }
         public string LikesText { get { return Likes > 0 ? string.Format("({0} likes)", Likes) : string.Empty; } }
-
         public int Likes { get; private set; }
+
+        public Comment(IList<Comment> children, IList<string> paragraphs, string authorName, DateTime created)
+        {
+            _children = children;
+            Paragraphs = paragraphs;
+            AuthorName = authorName;
+            _created = created;
+        }
     }
 }
