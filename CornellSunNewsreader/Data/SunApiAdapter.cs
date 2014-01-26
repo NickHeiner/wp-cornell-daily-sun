@@ -35,7 +35,7 @@ namespace CornellSunNewsreader.Data
             3,  // Arts
             13, // Science
             6,  // Dining
-            9,  // Multimedia
+            // 9,  // Multimedia - taking that out for now because it requires more sophistication to properly display.
             4,  // Blogs
         };
 
