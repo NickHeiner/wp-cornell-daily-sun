@@ -26,6 +26,19 @@ namespace CornellSunNewsreader.Data
         private static readonly string SECTIONS_JSON_KEY = "categories";
         private static readonly string POSTS_JSON_KEY = "posts";
 
+        // Ideally, this would just come via our API response.
+        internal static readonly IList<int> SECTIONS_WHITELIST = new List<int>()
+        {
+            11, // News
+            12, // Opinion
+            16, // Sports (we like Sports, and we don't care who knows!)
+            3,  // Arts
+            13, // Science
+            6,  // Dining
+            9,  // Multimedia
+            4,  // Blogs
+        };
+
         internal static IList<Section> SectionsOfApiResponse(string response)
         {
             JObject jsonData = JObject.Parse(response);

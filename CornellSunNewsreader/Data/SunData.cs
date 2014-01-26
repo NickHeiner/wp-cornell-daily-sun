@@ -135,6 +135,16 @@ namespace CornellSunNewsreader.Data
 
         public static event DownloadStringCompletedEventHandler DownloadFailed;
 
+        internal static bool ShouldAcceptSection(Section section)
+        {
+            // Just ignore subsections. Maybe later this app will handle them in some 
+            // interesting way, but for now let's simplify.
+            return !section.HasParent &&
+
+                // In practice, this may be redundant with the previous check.
+                SunApiAdapter.SECTIONS_WHITELIST.Contains(section.Vid);
+        }
+
         /// <summary>
         /// Callback for when the sections are downloaded from the Sun.
         /// Doesn't have anything to do with the stories themselves.
@@ -149,10 +159,7 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            var sections = SunApiAdapter.SectionsOfApiResponse(e.Result)
-                // Just ignore subsections. Maybe later this app will handle them in some 
-                // interesting way, but for now let's simplify.
-                .Where(section => !section.HasParent);
+            var sections = SunApiAdapter.SectionsOfApiResponse(e.Result).Where(ShouldAcceptSection);
 
             foreach (Section section in sections)
             {

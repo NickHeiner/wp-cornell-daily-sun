@@ -48,8 +48,8 @@ namespace CornellSunNewsreader.Models
         public StoryJson ToStoryJson()
         {
             int vid = sections
-                // we're basically pretending that sub-sections don't exist throughout this app
-                .Where(section => !section.HasParent)
+                // fuck me if this method is too restrictive and we don't find a section for this story.
+                .Where(SunData.ShouldAcceptSection)
                 .Select(section => section.Vid)
                 // just to make sure we consistently get the same vid for the same story
                 .OrderBy(id => id)
