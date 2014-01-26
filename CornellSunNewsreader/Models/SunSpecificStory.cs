@@ -45,12 +45,50 @@ namespace CornellSunNewsreader.Models
         [JsonProperty("attachments")]
         public IList<Attachment> attachments { get; set; }
 
+        /// <summary>
+        /// Sometimes, we'll request the stories for a section, with a url like 
+        /// 
+        ///     http://cornellsun.com/blog/category/sports/?json=get_recent_posts
+        ///     
+        /// but we will get a story response that has the categories entry:
+        /// 
+        ///     categories: [{
+        ///        id: 24,
+        ///        slug: "columns-sports",
+        ///        title: "Columns",
+        ///        description: "",
+        ///        parent: 16,
+        ///        post_count: 23
+        ///     }]
+        ///     
+        /// We only want to consider the parent section. Thus, we will just pretend that that is the 
+        /// only section this story belongs to.
+        /// </summary>
+        /// <returns></returns>
+        private bool hasValidSection()
+        {
+            return sections.Where(SunData.ShouldAcceptSection).Count() > 0;
+        }
+
         public StoryJson ToStoryJson()
         {
-            int vid = sections
-                // fuck me if this method is too restrictive and we don't find a section for this story.
+            IEnumerable<int> vids;
+
+            if (hasValidSection())
+            {
+                vids = sections
+                    // fuck me if this method is too restrictive and we don't find a section for this story.
                 .Where(SunData.ShouldAcceptSection)
-                .Select(section => section.Vid)
+                .Select(section => section.Vid);
+            }
+            else
+            {
+                vids = sections
+                    .Select(section => section.ParentId);
+            }
+
+            int vid = 
+                vids
                 // just to make sure we consistently get the same vid for the same story
                 .OrderBy(id => id)
                 .First();
