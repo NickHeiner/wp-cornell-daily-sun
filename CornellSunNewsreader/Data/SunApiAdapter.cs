@@ -69,28 +69,41 @@ namespace CornellSunNewsreader.Data
 
         internal static IList<Comment> CommentsOfCommentJsons(IEnumerable<CommentJson> commentJsons)
         {
-            return commentJsons
-                .Where(commentJson => !commentJson.HasParent)
+            return commentsOfCommentJsons(commentJsons, null);
+        }
+
+        private static IList<Comment> commentsOfCommentJsons(IEnumerable<CommentJson> commentJsons, CommentJson parent)
+        {
+            var roots = commentJsons
+                .Where(commentJson => parent == null ? commentJson.IsRoot : commentJson.isChildOf(parent));
+
+            var commentJsonsList = commentJsons.ToList();
+            var rootsList = roots.ToList();
+            var selected = roots.Select(commentJson => commentOfCommentJson(commentJsons, commentJson)).ToList();
+            var ordered = selected.OrderBy(comment => comment.Created).ToList();
+
+            return roots
 
                 // It would be nice to get some partial application here. F#, anyone?
-                .Select(commentJson => commentOfCommentJson(commentJson, commentJsons))
-                
+                .Select(commentJson => commentOfCommentJson(commentJsons, commentJson))
+
+                .OrderBy(comment => comment.Created)
                 .ToList();
         }
 
-        private static Comment commentOfCommentJson(CommentJson commentJson, IEnumerable<CommentJson> allComments)
+        private static Comment commentOfCommentJson(IEnumerable<CommentJson> possibleChildren, CommentJson commentJson)
         {
             return new Comment(
-                CommentsOfCommentJsons(getChildrenOf(commentJson, allComments)),
+                commentsOfCommentJsons(getChildrenOf(possibleChildren, commentJson), commentJson),
                 SunResponseParser.GetBody(commentJson.Message),
                 commentJson.Name,
                 DateTime.Parse(commentJson.CreatedAt).ToLocalTime()
             );
         }
 
-        private static IEnumerable<CommentJson> getChildrenOf(CommentJson commentJson, IEnumerable<CommentJson> allComments)
+        private static IEnumerable<CommentJson> getChildrenOf(IEnumerable<CommentJson> allComments, CommentJson parent)
         {
-            return allComments.Where(comment => comment.Parent == commentJson.Id);
+            return allComments.Where(commentJson => commentJson.isChildOf(parent));
         }
 
     }

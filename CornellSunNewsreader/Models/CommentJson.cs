@@ -42,13 +42,18 @@ namespace CornellSunNewsreader.Data
 
         // We also get a "url" field but I haven't seen it used.
 
-        public bool HasParent
+        public bool IsRoot
         {
             get
             {
                 // 0 is the magic value in the Sun Api for having no parent.
                 return Parent == 0;
             }
+        }
+
+        public bool isChildOf(CommentJson possibleParent)
+        {
+            return Parent == possibleParent.Id;
         }
     }
 }
