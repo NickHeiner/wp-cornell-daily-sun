@@ -27,7 +27,6 @@ namespace CornellSunNewsreader.Data
         private static readonly string POSTS_JSON_KEY = "posts";
 
         // Ideally, this would just come via our API response.
-        // TODO it would be nice to use this as the display order for sections as well, instead of displaying them lexicographically.
         internal static readonly IList<int> SECTIONS_WHITELIST = new List<int>()
         {
             11, // News
