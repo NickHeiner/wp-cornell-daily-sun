@@ -85,7 +85,7 @@ namespace CornellSunNewsreader.ViewModels
         public string Teaser
         {
             get
-            {
+            {   
                 return Story == null ? "" : Story.Teaser;
             }
         }
@@ -108,11 +108,20 @@ namespace CornellSunNewsreader.ViewModels
             }
         }
 
-        public string Date
+        public bool HasValidDate
         {
             get
             {
-                return Story == null || Story.Date == null ? "" : "Updated " + Story.Date;
+                DateTime _ = new DateTime();
+                return Story != null && DateTime.TryParse(Story.Date, out _);
+            }
+        }
+
+        public DateTime Date
+        {
+            get
+            {
+                return DateTime.Parse(Story.Date);
             }
         }
 
