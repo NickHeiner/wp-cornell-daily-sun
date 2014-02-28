@@ -163,10 +163,15 @@ namespace CornellSunNewsreader
             var selectedSection = (SectionViewModel)pivotControl.SelectedItem;
             ShellTile sectionTile = getTileForSection(selectedSection);
             Debug.Assert(sectionTile == null, "How was the 'pin to start' app bar item clicked if the section tile already exists?");
+
+            var storiesWithImages = selectedSection.Stories.Where(story => story.ImageSrc != null);
+            var image = storiesWithImages.Count() > 0 ? storiesWithImages.First().ImageSrc : null;
+
             ShellTile.Create(selectedSection.Section.Page, new StandardTileData
             {
                 Title = selectedSection.DisplayName,
-                BackgroundImage = new Uri("Tile Size.png", UriKind.Relative)
+                BackgroundImage = new Uri("TileSize.png", UriKind.Relative),
+                BackBackgroundImage = image
             });
         }
 
