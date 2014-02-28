@@ -74,20 +74,14 @@ namespace CornellSunNewsreader.Data
 
         private static IList<Comment> commentsOfCommentJsons(IEnumerable<CommentJson> commentJsons, CommentJson parent)
         {
-            var roots = commentJsons
-                .Where(commentJson => parent == null ? commentJson.IsRoot : commentJson.isChildOf(parent));
-
-            var commentJsonsList = commentJsons.ToList();
-            var rootsList = roots.ToList();
-            var selected = roots.Select(commentJson => commentOfCommentJson(commentJsons, commentJson)).ToList();
-            var ordered = selected.OrderBy(comment => comment.Created).ToList();
-
-            return roots
+            return commentJsons
+                .Where(commentJson => parent == null ? commentJson.IsRoot : commentJson.isChildOf(parent))
 
                 // It would be nice to get some partial application here. F#, anyone?
                 .Select(commentJson => commentOfCommentJson(commentJsons, commentJson))
 
                 .OrderBy(comment => comment.Created)
+                .Reverse()
                 .ToList();
         }
 
