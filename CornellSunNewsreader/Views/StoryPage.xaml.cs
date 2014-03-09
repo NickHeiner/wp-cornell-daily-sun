@@ -91,21 +91,6 @@ namespace CornellSunNewsreader
             ApplicationBar.Opacity = e.IsMenuVisible ? APP_BAR_ACTIVE_OPACITY : APP_BAR_INACTIVE_OPACITY;
         }
 
-        private void OnPinchStarted(object sender, PinchStartedGestureEventArgs e)
-        {
-            initialScale = getCurrentStory().TextScale;
-        }
-
-        private void OnPinchDelta(object sender, PinchGestureEventArgs e)
-        {
-            getCurrentStory().TextScale = Math.Max(Math.Min(initialScale * e.DistanceRatio, MAX_FONT_SIZE), MIN_FONT_SIZE);
-        }
-
-        private void ApplicationBarResetFontSize_Click(object sender, EventArgs e)
-        {
-            getCurrentStory().TextScale = (double)Application.Current.Resources["PhoneFontSizeNormal"];
-        }
-
         private void ShareViaSocialNetwork_Click(object sender, EventArgs e)
         {
             new ShareLinkTask { LinkUri = getCurrentStory().Story.CornellSunOnlineUri, Title = getCurrentStory().Title, Message = getCurrentStory().Teaser }.Show();

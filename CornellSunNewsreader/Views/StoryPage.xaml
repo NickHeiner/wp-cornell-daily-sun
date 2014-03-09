@@ -11,7 +11,6 @@
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
 	x:Class="CornellSunNewsreader.StoryPage"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
-	FontSize="{StaticResource PhoneFontSizeNormal}"
 	Foreground="{StaticResource PhoneForegroundBrush}"
 	SupportedOrientations="PortraitOrLandscape"
 	shell:SystemTray.IsVisible="True">
@@ -32,7 +31,6 @@
                 <shell:ApplicationBarMenuItem Text="share via social network" Click="ShareViaSocialNetwork_Click" />
                 <shell:ApplicationBarMenuItem Text="share via sms" Click="AppBarShareSms_Click" />
                 <shell:ApplicationBarMenuItem Text="open in browser" Click="AppBarViewOnline_Click" />
-                <shell:ApplicationBarMenuItem Text="reset font size" Click="ApplicationBarResetFontSize_Click" />
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
@@ -59,14 +57,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <!-- <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" /> -->
-                                <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" HyperlinkFontSize="{Binding ElementName=ParagraphItems, Path=DataContext.TextScale}"  />
+                                <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                    <toolkit:GestureService.GestureListener>
-                        <toolkit:GestureListener PinchStarted="OnPinchStarted" PinchDelta="OnPinchDelta" />
-                    </toolkit:GestureService.GestureListener>
                 </ItemsControl>
 
                 <!-- there's a bit of duplication here between CommentView's children ItemsControl and this, but w/e. -->
