@@ -35,9 +35,24 @@ namespace CornellSunNewsreader.Data
 
         private static IList<string> getTextFromTag(HtmlDocument doc, string tagname)
         {
+            return getTextFromTag(doc, tagname, null);
+        }
+
+        private static bool doesNotHaveClass(HtmlNode elem, string klass)
+        {
+            return elem != null && (!elem.Attributes.Contains("class") || !elem.Attributes["class"].Value.Contains(klass));
+        }
+
+        private static IList<string> getTextFromTag(HtmlDocument doc, string tagname, string classToIgnore)
+        {
             return doc
                 .DocumentNode
                 .Elements(tagname)
+                .Where(elem => classToIgnore == null || 
+                    (doesNotHaveClass(elem, classToIgnore) && 
+                        elem.ChildNodes.All(child => doesNotHaveClass(child, classToIgnore))
+                    )
+                )
                 .Select(elem => elem.InnerText)
                 .Select(HttpUtility.HtmlDecode)
                 .Where(str => str != "")
@@ -63,8 +78,8 @@ namespace CornellSunNewsreader.Data
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(bodyHtml);
 
-            return doc.DocumentNode.Elements("p").Count() > 0 ? 
-                getTextFromTag(doc, "p") :
+            return doc.DocumentNode.Elements("p").Count() > 0 ?
+                getTextFromTag(doc, "p", "simplePullQuote") :
                 getTextFromTag(doc, "div");
         }
 
