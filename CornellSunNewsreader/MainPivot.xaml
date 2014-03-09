@@ -23,7 +23,41 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
         <controls:Pivot Title="CORNELL DAILY SUN" x:Name="MainPivotControl">
+            <controls:PivotItem Header="sections" x:Name="SectionsPivotItem">
+                <Grid>
 
+                    <ProgressBar x:Name="LoadingProgressBar"
+                         IsIndeterminate="True"
+                         Style="{StaticResource PerformanceProgressBar}"
+                         VerticalAlignment="Top"/>
+
+                    <TextBlock x:Name="DownloadFailed"
+                             Visibility="Collapsed"
+                             Style="{StaticResource disabledText}">
+                        CornellSun.com could not be reached. Do you have a network connection?
+                        If this error persists, please contact web-editor@cornellsun.com.
+                    </TextBlock>
+
+                    <ListBox x:Name="sectionList" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="64" 
+                             SelectionChanged="MenuList_SelectionChanged"
+                             ItemsSource="{Binding SectionViewModels}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="SectionContextMenuItem_Click" />
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
+            </controls:PivotItem>
+            
             <controls:PivotItem x:Name="FavoritesPivotItem" Header="favorites">
                 <ScrollViewer VerticalScrollBarVisibility="{Binding VerticalScrolling}">
                     <StackPanel>
@@ -91,41 +125,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </controls:PivotItem>
-
-            <controls:PivotItem Header="sections" x:Name="SectionsPivotItem">
-                <Grid>
-
-                    <ProgressBar x:Name="LoadingProgressBar"
-                         IsIndeterminate="True"
-                         Style="{StaticResource PerformanceProgressBar}"
-                         VerticalAlignment="Top"/>
-
-                    <TextBlock x:Name="DownloadFailed"
-                             Visibility="Collapsed"
-                             Style="{StaticResource disabledText}">
-                        CornellSun.com could not be reached. Do you have a network connection?
-                        If this error persists, please contact web-editor@cornellsun.com.
-                    </TextBlock>
-
-                    <ListBox x:Name="sectionList" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="64" 
-                             SelectionChanged="MenuList_SelectionChanged"
-                             ItemsSource="{Binding SectionViewModels}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <toolkit:ContextMenuService.ContextMenu>
-                                        <toolkit:ContextMenu>
-                                            <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="SectionContextMenuItem_Click" />
-                                        </toolkit:ContextMenu>
-                                    </toolkit:ContextMenuService.ContextMenu>
-                                    <TextBlock Text="{Binding DisplayName}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
-                </Grid>
-            </controls:PivotItem>
+            
         </controls:Pivot>
     </Grid>
 
