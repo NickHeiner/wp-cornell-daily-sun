@@ -71,6 +71,12 @@
                 <TextBlock TextWrapping="Wrap" Style="{StaticResource PhoneTextSubtleStyle}">
                     Mango compatibility, pinching to resize text, pinning sections to start, horizontal story orientation
                 </TextBlock>
+                <TextBlock Margin="0,15,0,0">
+                    1.6.1 - Mar 2014
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource PhoneTextSubtleStyle}">
+                    Fixing everything to work with new CornellSun.com API.
+                </TextBlock>
             </StackPanel>
         </StackPanel>
     </Grid>
