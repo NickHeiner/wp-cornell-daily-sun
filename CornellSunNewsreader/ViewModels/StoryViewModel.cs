@@ -112,8 +112,8 @@ namespace CornellSunNewsreader.ViewModels
         {
             get
             {
-                DateTime _ = new DateTime();
-                return Story != null && DateTime.TryParse(Story.Date, out _);
+                DateTime dateTime = new DateTime();
+                return Story != null && DateTime.TryParse(Story.Date, out dateTime) && dateTime <= DateTime.Now;
             }
         }
 
@@ -121,7 +121,9 @@ namespace CornellSunNewsreader.ViewModels
         {
             get
             {
-                return DateTime.Parse(Story.Date);
+                // I think that the date converter will run regardless of whether or not the date is actually visible,
+                // so if the date is invalid we still need to provide it with a valid value so it does not crash.
+                return HasValidDate ? DateTime.Parse(Story.Date) : DateTime.Now;
             }
         }
 
