@@ -58,7 +58,8 @@ namespace CornellSunNewsreader.Data
 
         internal static string StoriesUrlOfSection(Section section)
         {
-            return CornellSunRootUrl + string.Format("blog/category/{0}/?json=get_recent_posts", section.Slug);
+            // We could also pass a `count` query param here if we wanted.
+            return CornellSunRootUrl + string.Format("blog/category/{0}/?json=get_posts&page={1}", section.Slug, section.LoadedPage);
         }
 
         private static Story storyOfJson(JsonSerializer serializer, JToken storyData)

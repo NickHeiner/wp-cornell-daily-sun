@@ -297,6 +297,8 @@ namespace CornellSunNewsreader.Data
                 if (nids.Intersect(existingNids).Count() == nids.Count())
                 {
                     // try the next page
+                    // Note: if we aren't constructing the url such that each successive attempt actually
+                    // is giving us subsequent pages, this recursion will go on indefinitely.
                     section.LoadedPage++;
                     GetMoreStories(section);
                     return;
