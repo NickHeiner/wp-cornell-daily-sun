@@ -269,20 +269,31 @@ namespace CornellSunNewsreader.Data
             return getSectionStories().Where(keyValue => keyValue.Key.Vid == vid).Single().Key;
         }
 
+        private static ISet<Section> sectionsCurrentlyLoadingMoreStories = new HashSet<Section>();
+
         // Find the first page of story data that contains stories we don't already have,
-        // then load that page.
+        // then load that page. This basically sucks, because we will request the last page twice
+        // (once to determine that we haven't loaded it yet, and once again to actually fetch the stories
+        // and update the models). It's shitty but I don't think it's worth fixing now.
         //
         // This could possibly be done much more simply on the server side
         // Just have a service that returns the page number we need
         // However, I'd rather minimize the serverside dependency, since it can break without notice.
         internal static void GetMoreStories(Section section)
         {
+            if (sectionsCurrentlyLoadingMoreStories.Contains(section))
+            {
+                return;
+            }
+            sectionsCurrentlyLoadingMoreStories.Add(section);
+
             // TODO: this seems to fire off two queries for the first page it checks
             // TODO: could the stories/nid view be used to save time when loading the 0th page?
             //       Perhaps it's not necessary to make that big call at all, if we're already fully cached.
             string queryUrl = SunApiAdapter.StoriesUrlOfSection(section);
             downloadData(queryUrl, (sender, e) =>
             {
+                sectionsCurrentlyLoadingMoreStories.Remove(section);
                 if (e.Error != null)
                 {
                     Debug.WriteLine("Error getting story nids page: " + queryUrl);

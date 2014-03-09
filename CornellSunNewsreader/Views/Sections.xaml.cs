@@ -87,12 +87,6 @@ namespace CornellSunNewsreader
             FetchMoreDataCommand = new DelegateCommand(
                 obj =>
                 {
-                    if (LoadingBarVisibility == System.Windows.Visibility.Visible)
-                    {
-                        // if we're already loading something, don't fire off a new request.
-                        return;
-                    }
-
                     // Stories are kept in an observable collection, so it shouldn't be necessary to use an onFinished 
                     // callback to manually fire onPropChanged().
                     SunData.GetMoreStories(SectionViewModels[pivotControl.SelectedIndex].Section);
