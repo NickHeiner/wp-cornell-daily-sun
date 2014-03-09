@@ -4,25 +4,7 @@
   <App xmlns="" ProductID="{ea3209dd-8945-4102-a28d-aaa810011245}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.6.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun" PublisherID="{b3f69bac-1836-4b25-99df-195fbb09b006}">
     <IconPath IsRelative="true" IsResource="false">small mobile app tile.png</IconPath>
     <Capabilities>
-      <!--
-      <Capability Name="ID_CAP_CAMERA" />
-      <Capability Name="ID_CAP_GAMERSERVICES" />
-      <Capability Name="ID_CAP_IDENTITY_DEVICE" />
-      <Capability Name="ID_CAP_IDENTITY_USER" />
-      <Capability Name="ID_CAP_INTEROPSERVICES" />
-      <Capability Name="ID_CAP_LOCATION" />
-      <Capability Name="ID_CAP_MEDIALIB" />
-      <Capability Name="ID_CAP_MICROPHONE" />
-       -->
       <Capability Name="ID_CAP_NETWORKING" />
-      <Capability Name="ID_CAP_NETWORKING_ADMIN" />
-      <!--
-      <Capability Name="ID_CAP_PHONEDIALER" />
-      <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
-      <Capability Name="ID_CAP_RINGTONE_ADD" />
-      <Capability Name="ID_CAP_SENSORS" />
-      -->
-      <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="MainPivot.xaml" />
