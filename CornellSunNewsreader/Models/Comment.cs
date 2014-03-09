@@ -36,10 +36,8 @@ namespace CornellSunNewsreader.Models
         {
             get
             {
-                // _created appears to be given as 5 hours ahead of time
-
                 // If we give a date in the future to the converter, it will crash
-                return _created.CompareTo(DateTime.Now) > 0 ? DateTime.Now : _created;
+                return _created > DateTime.Now ? DateTime.Now : _created;
             }
         }
 
@@ -48,12 +46,22 @@ namespace CornellSunNewsreader.Models
         public string LikesText { get { return Likes > 0 ? string.Format("({0} likes)", Likes) : string.Empty; } }
         public int Likes { get; private set; }
 
-        public Comment(IList<Comment> children, IList<string> paragraphs, string authorName, DateTime created)
+        /// <summary>
+        /// These values are only used for re-serialization (for caching). We could dynamically re-assign ids
+        /// at re-serialization time, but that seems more complicated than just not forgetting about them in the first place.
+        /// </summary>
+        public int Id { get; private set; }
+        public int ParentId { get; private set; }
+
+        public Comment(IList<Comment> children, IList<string> paragraphs, string authorName, DateTime created, int id, int parentId)
         {
             _children = children;
             Paragraphs = paragraphs;
             AuthorName = authorName;
             _created = created;
+
+            Id = id;
+            ParentId = parentId;
         }
     }
 }

@@ -52,7 +52,8 @@ namespace CornellSunNewsreader.Models
                 Teaser = Teaser, 
                 Vid = Vid, 
                 Date = Date, 
-                CornellSunOnlineUrl = CornellSunOnlineUri.AbsoluteUri 
+                CornellSunOnlineUrl = CornellSunOnlineUri.AbsoluteUri,
+                Comments = SunApiAdapter.CommentJsonsOfComments(Comments)
             };
         }
 

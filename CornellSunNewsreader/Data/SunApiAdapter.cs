@@ -1,4 +1,5 @@
 ﻿using CornellSunNewsreader.Models;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -68,6 +69,31 @@ namespace CornellSunNewsreader.Data
             return sunSpecificStory.ToStoryJson().ToStory();
         }
 
+        internal static IList<CommentJson> CommentJsonsOfComments(IEnumerable<Comment> comments)
+        {
+            return comments
+                .Select(comment => CommentJsonsOfComments(comment.Children).Prepend(CommentJsonOfComment(comment)))
+                .Flatten()
+                .ToList();
+        }
+
+        private static CommentJson CommentJsonOfComment(Comment comment)
+        {
+            // Ugh this is gross. But we need to make the message content appear precisely 
+            // as it would from the CornellSun API, so that the parsing code can be the same whether
+            // we're reading from the cache or the API.
+            var messageHtml = "<p>" + string.Join("</p><p>", comment.Paragraphs) + "</p>";
+
+            return new CommentJson()
+            {
+                Name = comment.AuthorName,
+                Message = messageHtml,
+                CreatedAt = comment.Created.ToString(),
+                Id = comment.Id,
+                Parent = comment.ParentId
+            };
+        }
+
         internal static IList<Comment> CommentsOfCommentJsons(IEnumerable<CommentJson> commentJsons)
         {
             return commentsOfCommentJsons(commentJsons, null);
@@ -92,7 +118,9 @@ namespace CornellSunNewsreader.Data
                 commentsOfCommentJsons(getChildrenOf(possibleChildren, commentJson), commentJson),
                 SunResponseParser.GetBody(commentJson.Message),
                 commentJson.Name,
-                DateTime.Parse(commentJson.CreatedAt).ToLocalTime()
+                DateTime.Parse(commentJson.CreatedAt),
+                commentJson.Id,
+                commentJson.Parent
             );
         }
 

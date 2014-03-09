@@ -46,5 +46,25 @@ namespace CornellSunNewsreader
             Debug.Assert(stringRep[0] == '"' && stringRep[stringRep.Length - 1] == '"');
             return stringRep.Substring(1, stringRep.Length - 2);
         }
+
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> src, T value)
+        {
+            yield return value;
+            foreach (T item in src)
+            {
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> nested)
+        {
+            foreach (IEnumerable<T> sublist in nested)
+            {
+                foreach (T item in sublist)
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 }
