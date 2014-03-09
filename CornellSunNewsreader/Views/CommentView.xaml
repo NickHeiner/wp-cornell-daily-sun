@@ -27,7 +27,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" HyperlinkFontSize="{Binding ElementName=ParagraphItems, Path=DataContext.TextScale}"  />
+                        <local:HyperlinkTextBlock Text="{Binding}" Margin="0,15" />
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -37,11 +37,9 @@
 
     <ScrollViewer>
         <StackPanel x:Name="LayoutRoot" Background="Transparent">
-            <toolkit:ContextMenuService.ContextMenu>
-                <toolkit:ContextMenu>
-                    <toolkit:MenuItem Header="{Binding ContextMenuText}" Click="ContextMenuItem_Click" />
-                </toolkit:ContextMenu>
-            </toolkit:ContextMenuService.ContextMenu>
+            <!-- I used to have a context menu here, but for certain stories opening it would cause a crash 
+                 with an "Argument out of range" error. I was unable to find any way to debug it, so I'm just taking it out.
+            -->
 
             <StackPanel Margin="0,0,0,28">
                 <TextBlock Text="{Binding SectionName}" Style="{StaticResource PhoneTextNormalStyle}" />
