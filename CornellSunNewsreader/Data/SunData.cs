@@ -154,16 +154,23 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            var sections = SunApiAdapter.SectionsOfApiResponse(e.Result).Where(ShouldAcceptSection);
-
-            foreach (Section section in sections)
+            try
             {
-                _sectionStories[section] = new ObservableCollection<Story>();
+                var sections = SunApiAdapter.SectionsOfApiResponse(e.Result).Where(ShouldAcceptSection);
+                foreach (Section section in sections)
+                {
+                    _sectionStories[section] = new ObservableCollection<Story>();
+                }
+
+                if (SectionsAcquired != null)
+                {
+                    SectionsAcquired(null, null);
+                }
             }
-
-            if (SectionsAcquired != null)
+            catch (JsonReaderException)
             {
-                SectionsAcquired(null, null);
+                Debug.Assert(false, "Why couldn't the JSON be parsed?");
+                DownloadFailed(sender, e);
             }
         }
 
