@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en" />
-  <App xmlns="" ProductID="{ea3209dd-8945-4102-a28d-aaa810011245}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.6.1.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun" PublisherID="{b3f69bac-1836-4b25-99df-195fbb09b006}">
+  <App xmlns="" ProductID="{ea3209dd-8945-4102-a28d-aaa810011245}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.7.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun" PublisherID="{b3f69bac-1836-4b25-99df-195fbb09b006}">
     <IconPath IsRelative="true" IsResource="false">small mobile app tile.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
