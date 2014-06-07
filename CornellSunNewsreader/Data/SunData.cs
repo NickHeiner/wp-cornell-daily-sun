@@ -41,29 +41,6 @@ namespace CornellSunNewsreader.Data
         /// </summary>
         public static event EventHandler DownloadStatusChanged;
 
-        private static void handleJsonWithSanitization(Action<string> handleJson, Action onFail, string json)
-        {
-            try
-            {
-                // Try the json by itself first; we only
-                // want to sanitize if there's a problem
-                // in case sanitization has a risk of
-                // screwing something else up.
-                handleJson(json);
-            }
-            catch (JsonReaderException)
-            {
-                try
-                {
-                    handleJson(SunApiAdapter.SanitizedJson(json));
-                }
-                catch (JsonReaderException)
-                {
-                    onFail();
-                }
-            }
-        }
-
         public static IEnumerable<Section> GetSections()
         {
             return getSectionStories()
@@ -177,7 +154,7 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            handleJsonWithSanitization(
+            SunApiAdapter.handleJsonWithSanitization(
                 (json) =>
                 {
                     var sections = SunApiAdapter.SectionsOfApiResponse(json).Where(ShouldAcceptSection);
@@ -257,7 +234,7 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            handleJsonWithSanitization(
+            SunApiAdapter.handleJsonWithSanitization(
                 (json) =>
                 {
                     var stories = SunApiAdapter.StoriesOfApiResponse(json);

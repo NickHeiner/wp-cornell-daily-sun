@@ -42,19 +42,33 @@ namespace CornellSunNewsreader.Data
 
         internal static IList<Section> SectionsOfApiResponse(string response)
         {
-            JObject jsonData = JObject.Parse(response);
-            JsonSerializer serializer = new JsonSerializer();
+            return handleJsonWithSanitization(
+                (json) =>
+                {
+                    JObject jsonData = JObject.Parse(json);
+                    JsonSerializer serializer = new JsonSerializer();
 
-            return serializer.Deserialize<List<Section>>(new JTokenReader(jsonData[SECTIONS_JSON_KEY]));
+                    return serializer.Deserialize<List<Section>>(new JTokenReader(jsonData[SECTIONS_JSON_KEY]));
+                },
+                null,
+                response
+            );
         }
 
         internal static IEnumerable<Story> StoriesOfApiResponse(string response)
         {
-            JObject jsonResponse = JObject.Parse(response);
-            JsonSerializer deserializer = new JsonSerializer();
+            return handleJsonWithSanitization(
+                (json) =>
+                {
+                    JObject jsonResponse = JObject.Parse(json);
+                    JsonSerializer deserializer = new JsonSerializer();
 
-            return from post in jsonResponse[POSTS_JSON_KEY]
-                   select storyOfJson(deserializer, post);
+                    return from post in jsonResponse[POSTS_JSON_KEY]
+                           select storyOfJson(deserializer, post);
+                },
+                null,
+                response
+            );
         }
 
         internal static string StoriesUrlOfSection(Section section)
@@ -133,6 +147,67 @@ namespace CornellSunNewsreader.Data
         /// Amusingly, the Sun's JSON responses are malformed because they include this stupid comment at the end.
         /// I've pinged the Sun's web editor(s) and they are unresponsive, so I'll just hack around it.
         /// </summary>
+        /// 
+        internal static T handleJsonWithSanitization<T>(Func<string, T> handleJson, Func<string, T> onFail, string json)
+        {
+            try
+            {
+                // Try the json by itself first; we only
+                // want to sanitize if there's a problem
+                // in case sanitization has a risk of
+                // screwing something else up.
+                return handleJson(json);
+            }
+            catch (JsonReaderException)
+            {
+                try
+                {
+                    return handleJson(SunApiAdapter.SanitizedJson(json));
+                }
+                catch (JsonReaderException e)
+                {
+                    if (onFail != null)
+                    {
+                        return onFail(json);
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        internal static void handleJsonWithSanitization(Action<string> handleJson, Action onFail, string json)
+        {
+            try
+            {
+                // Try the json by itself first; we only
+                // want to sanitize if there's a problem
+                // in case sanitization has a risk of
+                // screwing something else up.
+                handleJson(json);
+            }
+            catch (JsonReaderException)
+            {
+                try
+                {
+                    handleJson(SunApiAdapter.SanitizedJson(json));
+                }
+                catch (JsonReaderException e)
+                {
+                    if (onFail != null)
+                    {
+                        onFail();
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
+
         private static readonly string JSON_COMMENT = "<!-- Page not cached by WP Super Cache. No closing HTML tag. Check your theme. -->";
         internal static string SanitizedJson(string rawJson)
         {

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
+<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2014/deployment" AppPlatformVersion="8.1">
   <DefaultLanguage xmlns="" code="en" />
   <App xmlns="" ProductID="{ea3209dd-8945-4102-a28d-aaa810011245}" Title="Cornell Daily Sun" RuntimeType="Silverlight" Version="1.7.0.0" Genre="apps.normal" Author="Nick Heiner" Description="Read the Cornell Daily Sun on your phone!" Publisher="Cornell Daily Sun" PublisherID="{b3f69bac-1836-4b25-99df-195fbb09b006}">
     <IconPath IsRelative="true" IsResource="false">small mobile app tile.png</IconPath>
@@ -16,14 +16,10 @@
           <Count>0</Count>
           <BackgroundImageURI IsResource="false" IsRelative="true">TileSize.png</BackgroundImageURI>
           <Title>Cornell Daily Sun</Title>
-          <BackContent>
-          </BackContent>
-          <BackBackgroundImageURI>
-          </BackBackgroundImageURI>
-          <BackTitle>
-          </BackTitle>
-          <DeviceLockImageURI>
-          </DeviceLockImageURI>
+          <BackContent></BackContent>
+          <BackBackgroundImageURI></BackBackgroundImageURI>
+          <BackTitle></BackTitle>
+          <DeviceLockImageURI></DeviceLockImageURI>
           <HasLarge>False</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
