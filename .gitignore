@@ -27,6 +27,9 @@ Ankh.NoLoad
 
 .svn/
 
+PerfLogs
+SubmissionInfo
+
 #Tooling
 _ReSharper*/
 *.resharper
