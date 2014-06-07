@@ -129,5 +129,15 @@ namespace CornellSunNewsreader.Data
             return allComments.Where(commentJson => commentJson.isChildOf(parent));
         }
 
+        /// <summary>
+        /// Amusingly, the Sun's JSON responses are malformed because they include this stupid comment at the end.
+        /// I've pinged the Sun's web editor(s) and they are unresponsive, so I'll just hack around it.
+        /// </summary>
+        private static readonly string JSON_COMMENT = "<!-- Page not cached by WP Super Cache. No closing HTML tag. Check your theme. -->";
+        internal static string SanitizedJson(string rawJson)
+        {
+            return rawJson.EndsWith(JSON_COMMENT) ? rawJson.Substring(0, rawJson.Length - JSON_COMMENT.Length) : rawJson;
+        }
+
     }
 }

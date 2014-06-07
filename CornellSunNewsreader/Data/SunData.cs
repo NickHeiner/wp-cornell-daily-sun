@@ -41,6 +41,29 @@ namespace CornellSunNewsreader.Data
         /// </summary>
         public static event EventHandler DownloadStatusChanged;
 
+        private static void handleJsonWithSanitization(Action<string> handleJson, Action onFail, string json)
+        {
+            try
+            {
+                // Try the json by itself first; we only
+                // want to sanitize if there's a problem
+                // in case sanitization has a risk of
+                // screwing something else up.
+                handleJson(json);
+            }
+            catch (JsonReaderException)
+            {
+                try
+                {
+                    handleJson(SunApiAdapter.SanitizedJson(json));
+                }
+                catch (JsonReaderException)
+                {
+                    onFail();
+                }
+            }
+        }
+
         public static IEnumerable<Section> GetSections()
         {
             return getSectionStories()
@@ -154,24 +177,27 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            try
-            {
-                var sections = SunApiAdapter.SectionsOfApiResponse(e.Result).Where(ShouldAcceptSection);
-                foreach (Section section in sections)
+            handleJsonWithSanitization(
+                (json) =>
                 {
-                    _sectionStories[section] = new ObservableCollection<Story>();
-                }
+                    var sections = SunApiAdapter.SectionsOfApiResponse(json).Where(ShouldAcceptSection);
+                    foreach (Section section in sections)
+                    {
+                        _sectionStories[section] = new ObservableCollection<Story>();
+                    }
 
-                if (SectionsAcquired != null)
+                    if (SectionsAcquired != null)
+                    {
+                        SectionsAcquired(null, null);
+                    }
+                },
+                () =>
                 {
-                    SectionsAcquired(null, null);
-                }
-            }
-            catch (JsonReaderException)
-            {
-                Debug.Assert(false, "Why couldn't the JSON be parsed?");
-                DownloadFailed(sender, e);
-            }
+                    Debug.Assert(false, "Why couldn't the JSON be parsed?");
+                    DownloadFailed(sender, e);
+                },
+                e.Result
+            );
         }
 
         // ReadOnlyObservableCollection?
@@ -231,26 +257,29 @@ namespace CornellSunNewsreader.Data
                 return;
             }
 
-            try
-            {
-                var stories = SunApiAdapter.StoriesOfApiResponse(downloadCompletedEvent.Result);
-                var existingNids = storyCollection.Select(s => s.Nid);
-                int countStoriesAdded = insertStoriesAt == InsertStoriesAt.Beginning ? 0 : storyCollection.Count;
-                foreach (Story story in stories.Where(article => !existingNids.Contains(article.Nid)))
+            handleJsonWithSanitization(
+                (json) =>
                 {
-                    story.Vid = section.Vid;
+                    var stories = SunApiAdapter.StoriesOfApiResponse(json);
+                    var existingNids = storyCollection.Select(s => s.Nid);
+                    int countStoriesAdded = insertStoriesAt == InsertStoriesAt.Beginning ? 0 : storyCollection.Count;
+                    foreach (Story story in stories.Where(article => !existingNids.Contains(article.Nid)))
+                    {
+                        story.Vid = section.Vid;
 
-                    // cached stories will already be present
-                    // so we want to add the new stuff to the beginning
-                    // Do we need to sort anyway, or will this always work?
-                    storyCollection.Insert(countStoriesAdded++, story);
-                }
-            }
-            catch (JsonReaderException)
-            {
-                Debug.Assert(false, "Why couldn't the JSON be parsed?");
-                DownloadFailed(sender, downloadCompletedEvent);
-            }
+                        // cached stories will already be present
+                        // so we want to add the new stuff to the beginning
+                        // Do we need to sort anyway, or will this always work?
+                        storyCollection.Insert(countStoriesAdded++, story);
+                    }
+                },
+                () =>
+                {
+                    Debug.Assert(false, "Why couldn't the JSON be parsed?");
+                    DownloadFailed(sender, downloadCompletedEvent);
+                },
+                downloadCompletedEvent.Result
+            );
         }
 
         internal static Story getStory(int nid)
