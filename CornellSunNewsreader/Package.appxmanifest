@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
-  <Identity Name="f5144cb4-5145-4bf4-a7fa-382dab1d8817"
-            Publisher="CN=Nick Heiner"
+  <Identity Name="23731NickHeiner.CornellDailySun"
+            Publisher="CN=8204819B-4B45-464B-90E2-09C54A33232B"
             Version="1.7.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ea3209dd-8945-4102-a28d-aaa810011245" PhonePublisherId="b3f69bac-1836-4b25-99df-195fbb09b006"/>
