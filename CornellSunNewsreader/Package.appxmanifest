@@ -1,53 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-
-  <Identity Name="23731NickHeiner.CornellDailySun"
-            Publisher="CN=8204819B-4B45-464B-90E2-09C54A33232B"
-            Version="1.7.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="ea3209dd-8945-4102-a28d-aaa810011245" PhonePublisherId="b3f69bac-1836-4b25-99df-195fbb09b006"/>
-
+  <Identity Name="23731NickHeiner.CornellDailySun" Publisher="CN=8204819B-4B45-464B-90E2-09C54A33232B" Version="1.7.0.0" />
+  <mp:PhoneIdentity PhoneProductId="ea3209dd-8945-4102-a28d-aaa810011245" PhonePublisherId="b3f69bac-1836-4b25-99df-195fbb09b006" />
   <Properties>
     <DisplayName>CornellSunNewsreader</DisplayName>
     <PublisherDisplayName>Nick Heiner</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.3.1</OSMinVersion>
     <OSMaxVersionTested>6.3.1</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="xea3209ddy8945y4102ya28dyaaa810011245x"
-        Executable="AGHost.exe"
-        EntryPoint="MainPivot.xaml">
-      <m3:VisualElements
-          DisplayName="CornellSunNewsreader"
-          Square150x150Logo="Assets\SquareTile150x150.png"
-          Square44x44Logo="Assets\Logo.png"
-          Description="CornellSunNewsreader"
-          ForegroundText="light"
-          BackgroundColor="#464646">
-        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png"/>
+    <Application Id="xea3209ddy8945y4102ya28dyaaa810011245x" Executable="AGHost.exe" EntryPoint="MainPivot.xaml">
+      <m3:VisualElements DisplayName="CornellSunNewsreader" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="CornellSunNewsreader" ForegroundText="light" BackgroundColor="#464646">
+        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
+        </m3:DefaultTile>
         <m3:SplashScreen Image="SplashScreenImage.jpg" />
-        <m3:ApplicationView MinWidth="width320"/> <!--Used in XAML Designer. DO NOT REMOVE-->
+        <m3:ApplicationView MinWidth="width320" />
+        <!--Used in XAML Designer. DO NOT REMOVE-->
       </m3:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="AgHost.BackgroundTask">
           <BackgroundTasks>
-          <Task Type="systemEvent" />
+            <Task Type="systemEvent" />
           </BackgroundTasks>
         </Extension>
       </Extensions>
     </Application>
   </Applications>
-  <Capabilities>
-  </Capabilities>
   <Extensions>
     <Extension Category="windows.activatableClass.inProcessServer">
       <InProcessServer>
